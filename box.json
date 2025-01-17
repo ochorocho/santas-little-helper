@@ -1,0 +1,24 @@
+{
+  "alias": "slh.phar",
+  "main": "index.php",
+  "directories": [
+    "src",
+    "vendor"
+  ],
+  "compression": "GZ",
+  "stub": true,
+  "finder": [
+    {
+      "notName": "/.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/",
+      "exclude": ["Tests", "tests", "doc", "docs", "Fixtures", "bin", "crazywhalecc"],
+      "in": "vendor"
+    },
+    {
+      "notName": "/.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/",
+      "exclude": ["source", "dist", "bin"],
+      "in": "./"
+    }
+  ],
+  "git-version": "package_version",
+  "output": "dist/slh.phar"
+}

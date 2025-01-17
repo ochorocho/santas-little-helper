@@ -1,0 +1,59 @@
+{
+    "name": "ochorocho/santas-little-helper",
+    "description": "TYPO3 Development",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Ochorocho\\SantasLittleHelper\\": "src/"
+        }
+    },
+    "classmap": [
+        "src/"
+    ],
+    "authors": [
+        {
+            "name": "Jochen Roth",
+            "email": "rothjochen@gmail.com"
+        }
+    ],
+    "bin": [
+        "bin/slh"
+    ],
+    "license": ["MIT"],
+    "minimum-stability": "stable",
+    "require": {
+        "crazywhalecc/static-php-cli": "^2.4",
+        "symfony/console": "^7.2",
+        "thecodingmachine/safe": "^2.5"
+    },
+    "scripts": {
+        "build": [
+            "@build:phar",
+            "@build:prepare",
+            "@build:standalone"
+        ],
+        "doctor": [
+            "cd .cache/build && ../../vendor/bin/spc doctor"
+        ],
+        "build:prepare": [
+            "test -f dist/slh && rm dist/slh || true",
+            "test -d .cache/build || mkdir -p .cache/build",
+            "cd .cache/build && ../../vendor/bin/spc download --with-php=8.3 --for-extensions 'bcmath,filter,mbstring,mbregex,phar,zlib'"
+        ],
+        "build:phar": [
+            "test -f dist/slh.phar && rm dist/slh.phar || true",
+            "command -v box || (echo 'Please install humbug/box globally, see https://box-project.github.io/box/installation/#installation' && exit 1)",
+            "box compile"
+        ],
+        "build:standalone": [
+            "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first' && exit 1)",
+            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib'",
+            "cd .cache/build && ../../vendor/bin/spc micro:combine ../../dist/slh.phar --output ../../dist/slh-$(uname -m)",
+            "dist/slh-$(uname -m) -v"
+        ],
+        "build:clean": [
+            "rm -f dist/*",
+            "rm -Rf .cache"
+        ]
+    }
+}
