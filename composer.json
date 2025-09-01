@@ -24,7 +24,9 @@
     "require": {
         "crazywhalecc/static-php-cli": "^2.4",
         "symfony/console": "^7.2",
-        "thecodingmachine/safe": "^2.5"
+        "thecodingmachine/safe": "^2.5",
+        "composer/composer": "^2.8",
+        "phpstan/phpstan": "^2.1"
     },
     "scripts": {
         "build": [
@@ -38,7 +40,7 @@
         "build:prepare": [
             "test -f dist/slh && rm dist/slh || true",
             "test -d .cache/build || mkdir -p .cache/build",
-            "cd .cache/build && ../../vendor/bin/spc download --with-php=8.3 --for-extensions 'bcmath,filter,mbstring,mbregex,phar,zlib'"
+            "cd .cache/build && ../../vendor/bin/spc download --with-php=8.3 --for-extensions 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl'"
         ],
         "build:phar": [
             "test -f dist/slh.phar && rm dist/slh.phar || true",
@@ -47,7 +49,7 @@
         ],
         "build:standalone": [
             "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first' && exit 1)",
-            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib'",
+            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl'",
             "cd .cache/build && ../../vendor/bin/spc micro:combine ../../dist/slh.phar --output ../../dist/slh-$(uname -m)",
             "dist/slh-$(uname -m) -v"
         ],
