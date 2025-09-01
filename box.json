@@ -1,6 +1,5 @@
 {
   "alias": "slh.phar",
-  "main": "index.php",
   "directories": [
     "src",
     "vendor"

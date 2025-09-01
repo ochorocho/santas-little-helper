@@ -3,6 +3,7 @@
 namespace Ochorocho\SantasLittleHelper\Commands;
 
 use Composer\Console\Application;
+use Composer\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,9 +19,8 @@ class Composer extends Command
         $this
             ->setDescription('Wrapper for Composer commands')
             ->addArgument('args', InputArgument::IS_ARRAY, 'All composer arguments')
+            ->addOption('--help', '-h', InputOption::VALUE_NONE, 'okay')
             ->ignoreValidationErrors();
-            
-        $this->setHelp('This command allows you to run Composer commands like install, update, require, etc. If no subcommand is provided, it will show the list of available commands.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
