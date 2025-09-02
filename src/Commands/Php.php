@@ -8,14 +8,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'php', description: 'Run PHP scripts using embedded PHP interpreter')]
+#[AsCommand(name: 'php', description: 'Run PHP scripts using the embedded PHP interpreter')]
 class Php extends Command
 {
     protected function configure()
     {
-        $this
-            ->setDescription('Run PHP scripts using embedded PHP interpreter')
-            ->addArgument('script', InputArgument::REQUIRED, 'PHP script file to execute')
+        $this->addArgument('script', InputArgument::REQUIRED, 'PHP script file to execute')
             ->addArgument('args', InputArgument::IS_ARRAY, 'Arguments to pass to the PHP script');
             
         $this->setHelp('This command runs PHP scripts using the embedded PHP interpreter. Usage: php script.php [args...]');
