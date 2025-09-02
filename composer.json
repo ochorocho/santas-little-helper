@@ -26,7 +26,8 @@
         "symfony/console": "^7.2",
         "thecodingmachine/safe": "^2.5",
         "composer/composer": "^2.8",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.75"
     },
     "scripts": {
         "build": [
@@ -49,7 +50,7 @@
         ],
         "build:standalone": [
             "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first' && exit 1)",
-            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl'",
+            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer'",
             "cd .cache/build && ../../vendor/bin/spc micro:combine ../../dist/slh.phar --output ../../dist/slh-$(uname -m)",
             "dist/slh-$(uname -m) -v"
         ],
