@@ -3,7 +3,6 @@
 namespace Ochorocho\SantasLittleHelper\Commands;
 
 use Composer\Console\Application;
-use Composer\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,12 +13,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'composer', description: 'Run composer commands')]
 class Composer extends Command
 {
-    protected function configure()
+    protected Application $composerApplication;
+
+    protected function configure(): void
     {
+        $this->composerApplication = new Application();
+        $this->composerApplication->setAutoExit(false);
+        $this->composerApplication->setCatchExceptions(false);
+
         $this
-            ->setDescription('Wrapper for Composer commands')
+            ->setDescription('Run any composer command - Version ' . $this->composerApplication->getVersion())
             ->addArgument('args', InputArgument::IS_ARRAY, 'All composer arguments')
-            ->addOption('--help', '-h', InputOption::VALUE_NONE, 'okay')
             ->ignoreValidationErrors();
     }
 
@@ -27,25 +31,15 @@ class Composer extends Command
     {
         $args = $input->getArgument('args');
 
-        // If no arguments provided, default to 'list'
+        // If no arguments provided, show the main composer help
         if (empty($args)) {
-            $args = ['list'];
+            $args = [];
         }
 
-        // Create Composer application
-        $composerApp = new Application();
-        $composerApp->setAutoExit(false);
-        $composerApp->setCatchExceptions(false);
+        // Use StringInput to pass the raw command line to Composer
+        $commandString = implode(' ', array_map('escapeshellarg', $args));
+        $composerInput = new StringInput($commandString);
 
-        try {
-            // Use StringInput to pass the raw command line to Composer
-            $commandString = implode(' ', array_map('escapeshellarg', $args));
-            $composerInput = new StringInput($commandString);
-            
-            return $composerApp->run($composerInput, $output);
-        } catch (\Exception $e) {
-            $output->writeln('<error>Composer command failed: ' . $e->getMessage() . '</error>');
-            return Command::FAILURE;
-        }
+        return $this->composerApplication->run($composerInput, $output);
     }
 }

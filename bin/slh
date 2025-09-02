@@ -1,14 +1,27 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Component\Console\Application;
+use Ochorocho\SantasLittleHelper\Application\HelperApplication;
 use Ochorocho\SantasLittleHelper\Commands\Composer;
 use Ochorocho\SantasLittleHelper\Commands\Php;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$application = new Application();
+$santa = <<<EOF
+        / \__
+      (    @\__ 
+      /         O
+    /   (_____/
+  /_____ /   U
 
+  Santa's Little Helper
+EOF;
+
+// @todo: Set version based on the CI tag in use?
+$application = new HelperApplication($santa, '0.0.1');
+$application->setDefaultCommand('list');
+
+// Add commands to the application
 $application->add(new Composer());
 $application->add(new Php());
 
