@@ -22,6 +22,7 @@ $application = new HelperApplication($santa, '0.0.1');
 $application->setDefaultCommand('list');
 
 // Add commands to the application
+$application->add(new \Ochorocho\SantasLittleHelper\Commands\PhpStan());
 $application->add(new Composer());
 $application->add(new Php());
 

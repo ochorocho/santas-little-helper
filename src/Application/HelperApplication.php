@@ -15,7 +15,6 @@ class HelperApplication extends Application
 {
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
-
         // Special treatment for "composer --help" to get the actual output
         $rawArgs = (new ArgvInput($_SERVER['argv']))->getRawTokens();
         $isComposerHelp = count($rawArgs) >= 3 && $rawArgs[1] === 'composer' && (in_array('--help', $rawArgs) || in_array('-h', $rawArgs));

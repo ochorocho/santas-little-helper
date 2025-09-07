@@ -71,6 +71,14 @@ class Php extends Command
 
     private function executePhpScript(string $scriptContent, string $scriptPath): int
     {
+        // Remove shebang line if present
+        if (str_starts_with($scriptContent, '#!')) {
+            $firstNewline = strpos($scriptContent, "\n");
+            if ($firstNewline !== false) {
+                $scriptContent = substr($scriptContent, $firstNewline + 1);
+            }
+        }
+        
         // Remove opening PHP tag if present
         if (str_starts_with($scriptContent, '<?php')) {
             $scriptContent = substr($scriptContent, 5);
