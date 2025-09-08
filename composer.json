@@ -22,12 +22,12 @@
     "license": ["MIT"],
     "minimum-stability": "stable",
     "require": {
-        "crazywhalecc/static-php-cli": "^2.4",
+        "crazywhalecc/static-php-cli": "^2.7",
         "symfony/console": "^7.2",
-        "thecodingmachine/safe": "^2.5",
         "composer/composer": "^2.8",
         "phpstan/phpstan": "^2.1",
-        "friendsofphp/php-cs-fixer": "^3.75"
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "thecodingmachine/safe": "dev-master"
     },
     "scripts": {
         "build": [
@@ -36,12 +36,12 @@
             "@build:standalone"
         ],
         "doctor": [
-            "cd .cache/build && ../../vendor/bin/spc doctor"
+            "cd .cache && ../vendor/bin/spc doctor"
         ],
         "build:prepare": [
             "test -f dist/slh && rm dist/slh || true",
-            "test -d .cache/build || mkdir -p .cache/build",
-            "cd .cache/build && ../../vendor/bin/spc download --with-php=8.3 --for-extensions 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl'"
+            "test -d .cache || mkdir -p .cache",
+            "cd .cache/ && ../vendor/bin/spc craft ../craft.yml"
         ],
         "build:phar": [
             "test -f dist/slh.phar && rm dist/slh.phar || true",
@@ -50,8 +50,7 @@
         ],
         "build:standalone": [
             "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first' && exit 1)",
-            "cd .cache/build && ../../vendor/bin/spc build --build-micro 'bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer'",
-            "cd .cache/build && ../../vendor/bin/spc micro:combine ../../dist/slh.phar --output ../../dist/slh-$(uname -m)",
+            "cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -m)",
             "dist/slh-$(uname -m) -v"
         ],
         "build:clean": [
