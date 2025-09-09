@@ -1,8 +1,8 @@
 php-version: 8.4
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,xml"
-sapi: micro
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,xml,posix"
+sapi: micro,frankenphp
 download-options:
   prefer-pre-built: true
 build-options:
   enable-zts: true
-  with-hardcoded-ini: ["memory_limit=2G", "phar.readonly=0"]
+  with-hardcoded-ini: ["memory_limit=4G"]

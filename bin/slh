@@ -22,8 +22,22 @@ $application = new HelperApplication($santa, '0.0.1');
 $application->setDefaultCommand('list');
 
 // Add commands to the application
-$application->add(new \Ochorocho\SantasLittleHelper\Commands\PhpStan());
 $application->add(new Composer());
 $application->add(new Php());
 
+// @todo:
+// - Add create project via wizard - like done in the TDK
+// - Handy dev commands: Most common cheatsheet commands for git
+//   -- "git after pull" - see changed files and act accordingly
+//   -- "Hooks... pre hooks, skipped if needed" ?
+// - Add ini file so phar could write outside?! - Extract the php binary and run in case no local php found?
+// - Run project with frankenphp and sqlite
+// - Run any php script
+// Focus on:
+// - TDK features: Create dev environment (composer, non-composer)
+// - Project Template Setup - Extension renaming and such
+// Experiment:
+// - Wouldn't it be fun seeing runTests as standalone command using php
+// - PHP TUI: Might make sensor to easily pick a gerrit patch
+// - b13/make ... Need to get rid of a few TYPO3 dependencies, no one wants to package the entire core
 $application->run();

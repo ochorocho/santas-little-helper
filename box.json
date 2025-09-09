@@ -14,10 +14,11 @@
     },
     {
       "notName": "/.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/",
-      "exclude": ["source", "dist", "bin"],
+      "exclude": ["source", "dist"],
       "in": "./"
     }
   ],
   "git-version": "package_version",
-  "output": "dist/slh.phar"
+  "output": "dist/slh.phar",
+  "check-requirements": false
 }

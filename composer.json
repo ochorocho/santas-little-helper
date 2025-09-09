@@ -31,8 +31,8 @@
     },
     "scripts": {
         "build": [
-            "@build:phar",
             "@build:prepare",
+            "@build:phar",
             "@build:standalone"
         ],
         "doctor": [
@@ -45,11 +45,12 @@
         ],
         "build:phar": [
             "test -f dist/slh.phar && rm dist/slh.phar || true",
+            "test -f .cache/buildroot/bin/frankenphp && cp .cache/buildroot/bin/frankenphp bin/ || (echo '[!!!] FrankenPHP SAPI .cache/buildroot/bin/frankenphp does not exist.' && exit 1)",
             "command -v box || (echo 'Please install humbug/box globally, see https://box-project.github.io/box/installation/#installation' && exit 1)",
             "box compile"
         ],
         "build:standalone": [
-            "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first' && exit 1)",
+            "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
             "cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -m)",
             "dist/slh-$(uname -m) -v"
         ],

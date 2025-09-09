@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ochorocho\SantasLittleHelper\Commands;
 
 use Composer\Console\Application;
