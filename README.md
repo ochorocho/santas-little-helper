@@ -37,7 +37,7 @@ composer run build:standalone
 Once this was successful, `composer run build` will rebuild
 the entire phar and binary.
 
-# Webserver
+## Webserver
 
 ```
 ./bin/frankenphp run -c ./templates/Caddyfile --envfile .env
