@@ -2,9 +2,6 @@
 
 ![Santas-Little-Helper.png](images/Santas-Little-Helper.png)
 
-
-:warning: Just having a play with static-php.dev
-
 ## Build locally
 
 Install composer packages
