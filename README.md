@@ -1,5 +1,8 @@
 # Santa's Little Helper - One to rule them all
 
+![Santas-Little-Helper.png](images/Santas-Little-Helper.png)
+
+
 :warning: Just having a play with static-php.dev
 
 ## Build locally
@@ -36,3 +39,9 @@ composer run build:standalone
 
 Once this was successful, `composer run build` will rebuild
 the entire phar and binary.
+
+# Webserver
+
+```
+./bin/frankenphp run -c ./templates/Caddyfile --envfile .env
+```

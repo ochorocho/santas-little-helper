@@ -4,6 +4,7 @@
 use Ochorocho\SantasLittleHelper\Application\HelperApplication;
 use Ochorocho\SantasLittleHelper\Commands\Composer;
 use Ochorocho\SantasLittleHelper\Commands\Php;
+use Ochorocho\SantasLittleHelper\Commands\Webserver;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -24,6 +25,7 @@ $application->setDefaultCommand('list');
 // Add commands to the application
 $application->add(new Composer());
 $application->add(new Php());
+$application->add(new Webserver());
 
 // @todo:
 // - Add create project via wizard - like done in the TDK
@@ -32,7 +34,13 @@ $application->add(new Php());
 //   -- "Hooks... pre hooks, skipped if needed" ?
 // - Add ini file so phar could write outside?! - Extract the php binary and run in case no local php found?
 // - Run project with frankenphp and sqlite
-// - Run any php script
+// - **DONE** Run any php script
+// - use settings in composer.json "vendor-dir" and "web-dir" + Custom settings for slh with validation
+// 	    "extra": {
+//		    "typo3/cms": {
+//			    "web-dir": "web"
+//		    }
+//	    },
 // Focus on:
 // - TDK features: Create dev environment (composer, non-composer)
 // - Project Template Setup - Extension renaming and such

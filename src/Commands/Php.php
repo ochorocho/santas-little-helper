@@ -36,11 +36,12 @@ class Php extends Command
         $this->pathService->pharExtractFileToConfigBin('bin/frankenphp');
         $script = realpath($input->getArgument('script'));
         if(!$script) {
-            $logger->error('Failed to execute file ' . $input->getArgument('script') .' , because it was not found.');
+            $logger->error('Failed to execute file ' . $input->getArgument('script') . ', because it was not found.');
             return Command::FAILURE;
         }
 
         $args = $input->getArgument('args') ?? [];
+        // @todo: Verify if this is working for args and options!
         $process = new Process([$phpBinary, 'php-cli', $script, ...$args]);
         $process->setTty(true);
         $output->writeln(['<comment>Running command:</comment>', $process->getCommandLine(), '']);

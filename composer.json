@@ -26,8 +26,7 @@
         "symfony/console": "^7.2",
         "composer/composer": "^2.8",
         "phpstan/phpstan": "^2.1",
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "thecodingmachine/safe": "dev-master"
+        "friendsofphp/php-cs-fixer": "^3.75"
     },
     "scripts": {
         "build": [

@@ -36,15 +36,17 @@ class PathService
     {
         $configFolder = $this->getConfigFolder();
         $basePath = str_replace('/' . basename($path), '', $path);
+        $binaryPath = $configFolder . '/' . $basePath;
 
-        if(!is_dir($basePath)) {
-            mkdir($configFolder . '/' . $basePath);
+        if(!file_exists($binaryPath)) {
+            mkdir($binaryPath);
         }
 
-        if(!file_exists($configFolder . '/' . $path)) {
+        $filePath = $configFolder . '/' . $path;
+        if(!file_exists($filePath)) {
             $phar = new \Phar('phar://' . $this->getPharPath());
             $phar->extractTo($configFolder, $path, true);
-            chmod($configFolder . '/' . $path, 0755);
+            chmod($filePath, 0755);
         }
     }
 

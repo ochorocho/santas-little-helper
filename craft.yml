@@ -1,5 +1,6 @@
 php-version: 8.4
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,xml,posix"
+# @todo: Add all extensions required for TYPO3 e.g. redis?!
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom"
 sapi: micro,frankenphp
 download-options:
   prefer-pre-built: true
