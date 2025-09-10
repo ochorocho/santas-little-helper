@@ -14,7 +14,7 @@
     },
     {
       "notName": "/.*\\.md|.*\\.dist|Makefile|composer\\.json|composer\\.lock/",
-      "exclude": ["source", "dist"],
+      "exclude": ["source", "dist", "images"],
       "in": "./"
     }
   ],
