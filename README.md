@@ -2,6 +2,12 @@
 
 ![Santas-Little-Helper.png](images/Santas-Little-Helper.png)
 
+## Build requirements
+
+* PHP >= 8.3
+* composer
+* humbug/box: `composer global require humbug/box`
+
 ## Build locally
 
 Install composer packages

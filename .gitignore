@@ -4,3 +4,4 @@
 /.cache
 /dist/*
 /bin/frankenphp
+/test

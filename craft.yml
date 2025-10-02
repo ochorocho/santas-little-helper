@@ -1,9 +1,9 @@
 php-version: 8.4
-# @todo: Add all extensions required for TYPO3 e.g. redis?!
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom"
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,mysqlnd,pdo,pdo_mysql"
+libs: freetype,libavif,libjpeg,libwebp,brotli
 sapi: micro,frankenphp
 download-options:
   prefer-pre-built: true
 build-options:
   enable-zts: true
-  with-hardcoded-ini: ["memory_limit=4G"]
+  with-hardcoded-ini: ["memory_limit=4G", "max_input_vars=1500"]

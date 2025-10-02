@@ -12,24 +12,24 @@
 	order php before file_server
 }
 
-{$CADDY_EXTRA_CONFIG}
+{$CADDY_EXTRA_CONFIG} 
 
 {$SERVER_NAME:localhost} {
-    # @todo: Get this config value from the composer.json
+	# @todo: Get this config value from the composer.json
 	root * public/
 
-    # TYPO3 Frontend
-    @frontend {
-        path /*
-        not path /.well-known/* /_assets/* /favicon.ico
-        file {
-            try_files {path} /index.php
-            split_path .php
-        }
-    }
-    rewrite @frontend {http.matchers.file.relative}
+	# TYPO3 Frontend
+	@frontend {
+		path /*
+		not path /.well-known/* /_assets/* /favicon.ico
+		file {
+			try_files {path} /index.php
+			split_path .php
+		}
+	}
+	rewrite @frontend {http.matchers.file.relative}
 
-	encode zstd gzip
+	encode zstd gzip 
 
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 

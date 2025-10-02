@@ -25,8 +25,8 @@
         "crazywhalecc/static-php-cli": "^2.7",
         "symfony/console": "^7.2",
         "composer/composer": "^2.8",
-        "phpstan/phpstan": "^2.1",
-        "friendsofphp/php-cs-fixer": "^3.75"
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "symfony/http-client": "^7.3"
     },
     "scripts": {
         "build": [

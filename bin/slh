@@ -3,6 +3,7 @@
 
 use Ochorocho\SantasLittleHelper\Application\HelperApplication;
 use Ochorocho\SantasLittleHelper\Commands\Composer;
+use Ochorocho\SantasLittleHelper\Commands\CoreComposer;
 use Ochorocho\SantasLittleHelper\Commands\Php;
 use Ochorocho\SantasLittleHelper\Commands\Webserver;
 
@@ -26,6 +27,7 @@ $application->setDefaultCommand('list');
 $application->add(new Composer());
 $application->add(new Php());
 $application->add(new Webserver());
+$application->add(new CoreComposer());
 
 // @todo:
 // - Add create project via wizard - like done in the TDK

@@ -38,16 +38,16 @@ class PathService
         $basePath = str_replace('/' . basename($path), '', $path);
         $binaryPath = $configFolder . '/' . $basePath;
 
-        if(!file_exists($binaryPath)) {
+        if(!is_dir($binaryPath)) {
             mkdir($binaryPath);
         }
 
         $filePath = $configFolder . '/' . $path;
-        if(!file_exists($filePath)) {
+//        if(!file_exists($filePath)) {
             $phar = new \Phar('phar://' . $this->getPharPath());
             $phar->extractTo($configFolder, $path, true);
             chmod($filePath, 0755);
-        }
+//        }
     }
 
     private function createConfigFolder(): string
