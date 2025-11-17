@@ -45,6 +45,7 @@ class Php extends Command
         $process = new Process([$phpBinary, 'php-cli', $script, ...$args]);
         $process->setTty(true);
         $output->writeln(['<comment>Running command:</comment>', $process->getCommandLine(), '']);
+        $process->setTimeout(null);
         $process->start();
 
         foreach ($process->getIterator() as $data) {

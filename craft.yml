@@ -1,5 +1,5 @@
 php-version: 8.4
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,mysqlnd,pdo,pdo_mysql"
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,mysqlnd,pdo,pdo_mysql,sqlite3,pdo_sqlite"
 libs: freetype,libavif,libjpeg,libwebp,brotli
 sapi: micro,frankenphp
 download-options:

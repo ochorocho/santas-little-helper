@@ -14,14 +14,14 @@ class HookService extends BaseService
 {
     protected ConsoleLogger $logger;
 
-    public function __construct(private readonly SymfonyStyle $io, private readonly OutputInterface $output)
+    public function __construct(private readonly OutputInterface $output, private readonly string $targetFolder)
     {
         $this->logger = new ConsoleLogger($this->output);
     }
 
-    public function enable(bool $force = false): void
+    public function getHookQuestions(): array
     {
-        $questions = [
+        return [
             [
                 'method' => 'enableCommitMessage',
                 'message' => 'Setup Commit Message Hook?',
@@ -33,20 +33,6 @@ class HookService extends BaseService
                 'default' => true
             ],
         ];
-
-        $force = (bool)($force ?: getenv('SLH_HOOK_FORCE_CREATE') ?: false);
-        foreach ($questions as $question) {
-            if ($force) {
-                $answer = true;
-            } else {
-                $answer = $this->io->confirm($question['message'], $question['default']);
-            }
-
-            if ($answer) {
-                $method = $question['method'];
-                $this->$method();
-            }
-        }
     }
 
     public function remove(): void
@@ -58,13 +44,13 @@ class HookService extends BaseService
         ]);
     }
 
-    private function enableCommitMessage(): void
+    public function enableCommitMessage(): void
     {
         $filesystem = new Filesystem();
 
         try {
-            $targetCommitMsg = $this->coreDevFolder . '/.git/hooks/commit-msg';
-            $filesystem->copy($this->coreDevFolder . '/Build/git-hooks/commit-msg', $targetCommitMsg);
+            $targetCommitMsg = $this->targetFolder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/commit-msg';
+            $filesystem->copy($this->targetFolder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/commit-msg', $targetCommitMsg);
 
             if (!is_executable($targetCommitMsg)) {
                 $filesystem->chmod($targetCommitMsg, 0755);
@@ -74,7 +60,7 @@ class HookService extends BaseService
         }
     }
 
-    private function enablePreCommit(): void
+    public function enablePreCommit(): void
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             return;
@@ -82,8 +68,8 @@ class HookService extends BaseService
 
         $filesystem = new Filesystem();
         try {
-            $targetPreCommit = $this->coreDevFolder . '/.git/hooks/pre-commit';
-            $filesystem->copy($this->coreDevFolder . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
+            $targetPreCommit = $this->targetFolder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/pre-commit';
+            $filesystem->copy($this->targetFolder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
 
             if (!is_executable($targetPreCommit)) {
                 $filesystem->chmod($targetPreCommit, 0755);
