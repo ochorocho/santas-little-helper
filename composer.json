@@ -37,7 +37,7 @@
 			"@build:standalone"
 		],
 		"doctor": [
-			"cd .cache && ../vendor/bin/spc doctor"
+			"cd .cache && ../vendor/bin/spc doctor --auto-fix"
 		],
 		"build:prepare": [
 			"test -f dist/slh && rm dist/slh || true",

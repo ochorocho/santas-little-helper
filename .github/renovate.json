@@ -1,0 +1,28 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", ":disableMajorUpdates", ":disableDependencyDashboard"],
+    "commitMessagePrefix": "[RENOVATE] ",
+    "commitMessageTopic": "{{depName}}",
+    "commitMessageExtra": " ({{{displayFrom}}} => {{{displayTo}}})",
+    "rangeStrategy": "in-range-only",
+    "enabledManagers": ["composer", "dockerfile"],
+    "packageRules": [
+      {
+          "groupName": "TYPO3 CMS",
+          "matchManagers": ["composer"]
+      }, {
+        "groupName": "Docker",
+        "matchDatasources": ["docker"],
+        "matchManagers": ["dockerfile"],
+        "versioning": "semver"
+      }
+    ],
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/vendor/**",
+        "**/test/**",
+        "**/tests/**",
+        "**/fixtures/**",
+        "**/packages/**"
+    ]
+}
