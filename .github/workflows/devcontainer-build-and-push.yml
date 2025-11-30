@@ -32,6 +32,10 @@ jobs:
       - name: Build binary
         shell: bash
         run: composer run --timeout 1800 build
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          path: '/app/dist/'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
