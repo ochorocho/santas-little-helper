@@ -1,4 +1,10 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04
 
-COPY /app/dist/slh-aarch64 /usr/local/bin/slh
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+ARG TARGETVARIANT
+RUN echo "I'm building for TARGETPLATFORM: $TARGETPLATFORM - TARGETARCH $TARGETARCH - TARGETVARIANT $TARGETVARIANT - TARGETOS $TARGETOS"
 
+# @todo: use dynamic architecture
+COPY ./slh-${TARGETARCH} /usr/local/bin/slh
