@@ -26,7 +26,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: bash docker-builder/deps.sh
+        run: |
+          bash docker-builder/deps.sh
+          composer install
       - name: Build binary
         shell: bash
         run: composer run --timeout 1800 build
