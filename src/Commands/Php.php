@@ -35,7 +35,7 @@ class Php extends Command
         $phpBinary = $this->pathService->getConfigFolder() . '/bin/frankenphp';
         $this->pathService->pharExtractFileToConfigBin('bin/frankenphp');
         $script = realpath($input->getArgument('script'));
-        if(!$script) {
+        if (!$script) {
             $logger->error('Failed to execute file ' . $input->getArgument('script') . ', because it was not found.');
             return Command::FAILURE;
         }

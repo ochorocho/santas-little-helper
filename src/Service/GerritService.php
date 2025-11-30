@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Ochorocho\SantasLittleHelper\Service;
 
@@ -21,7 +21,7 @@ class GerritService
 
     /**
      * @param string $username
-     * @return array
+     * @return array<string>
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
@@ -35,7 +35,7 @@ class GerritService
             'https://review.typo3.org/accounts/' . urlencode($username) . '/?pp=0'
         );
 
-        if($request->getStatusCode() > 200) {
+        if ($request->getStatusCode() > 200) {
             throw new \RuntimeException('The given username "' . $username . '" was not found on https://review.typo3.org/');
         }
 

@@ -1,61 +1,68 @@
 {
-    "name": "ochorocho/santas-little-helper",
-    "description": "TYPO3 Development",
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "Ochorocho\\SantasLittleHelper\\": "src/"
-        }
-    },
-    "classmap": [
-        "src/"
-    ],
-    "authors": [
-        {
-            "name": "Jochen Roth",
-            "email": "rothjochen@gmail.com"
-        }
-    ],
-    "bin": [
-        "bin/slh"
-    ],
-    "license": ["MIT"],
-    "minimum-stability": "stable",
-    "require": {
-        "crazywhalecc/static-php-cli": "^2.7",
-        "symfony/console": "^7.2",
-        "composer/composer": "^2.8",
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "symfony/http-client": "^7.3"
-    },
-    "scripts": {
-        "build": [
-            "@build:prepare",
-            "@build:phar",
-            "@build:standalone"
-        ],
-        "doctor": [
-            "cd .cache && ../vendor/bin/spc doctor"
-        ],
-        "build:prepare": [
-            "test -f dist/slh && rm dist/slh || true",
-            "test -d .cache || mkdir -p .cache",
-            "cd .cache/ && ../vendor/bin/spc craft ../craft.yml"
-        ],
-        "build:phar": [
-            "test -f dist/slh.phar && rm dist/slh.phar || true",
-            "test -f .cache/buildroot/bin/frankenphp && cp .cache/buildroot/bin/frankenphp bin/ || (echo '[!!!] FrankenPHP SAPI .cache/buildroot/bin/frankenphp does not exist.' && exit 1)",
-            "command -v box || (echo 'Please install humbug/box globally, see https://box-project.github.io/box/installation/#installation' && exit 1)",
-            "box compile"
-        ],
-        "build:standalone": [
-            "test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
-            "cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -m)",
-            "dist/slh-$(uname -m) -v"
-        ],
-        "build:clean": [
-            "rm -f dist/*",
-            "rm -Rf .cache"
-        ]
-    }
+	"name": "ochorocho/santas-little-helper",
+	"description": "TYPO3 Development",
+	"type": "library",
+	"autoload": {
+		"psr-4": {
+			"Ochorocho\\SantasLittleHelper\\": "src/"
+		}
+	},
+	"classmap": [
+		"src/"
+	],
+	"authors": [
+		{
+			"name": "Jochen Roth",
+			"email": "rothjochen@gmail.com"
+		}
+	],
+	"bin": [
+		"bin/slh"
+	],
+	"license": [
+		"MIT"
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"crazywhalecc/static-php-cli": "^2.7",
+		"symfony/console": "^7.2",
+		"composer/composer": "^2.8",
+		"friendsofphp/php-cs-fixer": "^3.75",
+		"symfony/http-client": "^7.3"
+	},
+	"scripts": {
+		"build": [
+			"@build:prepare",
+			"@build:phar",
+			"@build:standalone"
+		],
+		"doctor": [
+			"cd .cache && ../vendor/bin/spc doctor"
+		],
+		"build:prepare": [
+			"test -f dist/slh && rm dist/slh || true",
+			"test -d .cache || mkdir -p .cache",
+			"cd .cache/ && ../vendor/bin/spc download --with-php=8.4 xdebug",
+			"cd .cache/ && ../vendor/bin/spc craft ../craft.yml"
+		],
+		"build:phar": [
+			"test -f dist/slh.phar && rm dist/slh.phar || true",
+			"test -f .cache/buildroot/bin/frankenphp && cp .cache/buildroot/bin/frankenphp bin/ || (echo '[!!!] FrankenPHP SAPI .cache/buildroot/bin/frankenphp does not exist.' && exit 1)",
+			"command -v box || (echo 'Please install humbug/box globally, see https://box-project.github.io/box/installation/#installation' && exit 1)",
+			"box compile"
+		],
+		"build:standalone": [
+			"test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
+			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -m)",
+			"dist/slh-$(uname -m) -v"
+		],
+		"build:clean": [
+			"rm -f dist/*",
+			"rm -Rf .cache"
+		]
+	},
+	"require-dev": {
+		"phpstan/phpstan": "^2.1",
+		"typo3/coding-standards": "^0.8.0"
+	}
 }

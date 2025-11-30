@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ochorocho\SantasLittleHelper\Application;
 
-use Symfony\Component\Console\Application;
 use Composer\Console\Application as ComposerApplication;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;

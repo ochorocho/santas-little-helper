@@ -48,3 +48,20 @@ the entire phar and binary.
 ```
 ./bin/frankenphp run -c ./templates/Caddyfile --envfile .env
 ```
+
+# Testing - use phar!
+
+Built the PHAR (`./dist/slh.phar`):
+
+```bash
+composer build:phar
+```
+
+Run automated setup:
+
+```bash
+SLH_USERNAME=ochorocho \
+SLH_HOOK_CREATE=1 \
+SLH_COMMIT_TEMPLATE="~/.santas-little-helper/gitmessage.txt" \
+../dist/slh.phar core:setup typo3-speed-core
+```

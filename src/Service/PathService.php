@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Ochorocho\SantasLittleHelper\Service;
 
@@ -21,11 +21,10 @@ class PathService
         return $configFolder;
     }
 
-
     public function getConfigPath(): string
     {
         $absolutePath = $this->getHomeDirectory() . '/' . $this->configFolder;
-        if(!is_dir($absolutePath)) {
+        if (!is_dir($absolutePath)) {
             throw new RuntimeException("Config folder '{$absolutePath}' does not exist");
         }
 
@@ -38,22 +37,22 @@ class PathService
         $basePath = str_replace('/' . basename($path), '', $path);
         $binaryPath = $configFolder . '/' . $basePath;
 
-        if(!is_dir($binaryPath)) {
+        if (!is_dir($binaryPath)) {
             mkdir($binaryPath);
         }
 
         $filePath = $configFolder . '/' . $path;
-//        if(!file_exists($filePath)) {
-            $phar = new \Phar('phar://' . $this->getPharPath());
-            $phar->extractTo($configFolder, $path, true);
-            chmod($filePath, 0755);
-//        }
+        //        if(!file_exists($filePath)) {
+        $phar = new \Phar('phar://' . $this->getPharPath());
+        $phar->extractTo($configFolder, $path, true);
+        chmod($filePath, 0755);
+        //        }
     }
 
     private function createConfigFolder(): string
     {
         $configFolder = $this->getHomeDirectory() . '/' . $this->configFolder;
-        if(mkdir($configFolder, 0777, true)) {
+        if (mkdir($configFolder, 0777, true)) {
             return $configFolder;
         }
 
@@ -72,7 +71,7 @@ class PathService
             return posix_getpwuid(getmyuid())['dir'];
         }
 
-        if(($_SERVER['HOME'] ?? '') !== '') {
+        if (($_SERVER['HOME'] ?? '') !== '') {
             return $_SERVER['HOME'];
         }
 

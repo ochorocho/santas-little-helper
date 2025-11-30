@@ -6,7 +6,8 @@ namespace Ochorocho\SantasLittleHelper\Validator;
 
 use Ochorocho\SantasLittleHelper\Service\GerritService;
 
-readonly class UserValidator {
+readonly class UserValidator
+{
     public function username(): \Closure
     {
         return function ($value): array {

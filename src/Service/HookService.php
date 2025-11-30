@@ -4,35 +4,20 @@ declare(strict_types=1);
 
 namespace Ochorocho\SantasLittleHelper\Service;
 
-use Ochorocho\SantasLittleHelper\Logger\ConsoleLogger;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Filesystem\Filesystem;
 
 class HookService extends BaseService
 {
-    protected ConsoleLogger $logger;
-
-    public function __construct(private readonly OutputInterface $output, private readonly string $targetFolder)
+    public function __construct(protected ConsoleLogger $logger)
     {
-        $this->logger = new ConsoleLogger($this->output);
+        parent::__construct($logger);
     }
 
-    public function getHookQuestions(): array
+    public function create(string $folder): void
     {
-        return [
-            [
-                'method' => 'enableCommitMessage',
-                'message' => 'Setup Commit Message Hook?',
-                'default' => true
-            ],
-            [
-                'method' => 'enablePreCommit',
-                'message' => 'Setup Pre Commit Hook?',
-                'default' => true
-            ],
-        ];
+        $this->enableCommitMessage($folder);
+        $this->enablePreCommit($folder);
     }
 
     public function remove(): void
@@ -44,38 +29,27 @@ class HookService extends BaseService
         ]);
     }
 
-    public function enableCommitMessage(): void
+    private function enableCommitMessage(string $folder): void
     {
         $filesystem = new Filesystem();
 
-        try {
-            $targetCommitMsg = $this->targetFolder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/commit-msg';
-            $filesystem->copy($this->targetFolder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/commit-msg', $targetCommitMsg);
+        $targetCommitMsg = $folder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/commit-msg';
+        $filesystem->copy($folder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/commit-msg', $targetCommitMsg);
 
-            if (!is_executable($targetCommitMsg)) {
-                $filesystem->chmod($targetCommitMsg, 0755);
-            }
-        } catch (IOException $e) {
-            $this->logger->error('Exception:enableCommitMessageHook:' . $e->getMessage());
+        if (!is_executable($targetCommitMsg)) {
+            $filesystem->chmod($targetCommitMsg, 0755);
         }
     }
 
-    public function enablePreCommit(): void
+    private function enablePreCommit(string $folder): void
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            return;
-        }
-
         $filesystem = new Filesystem();
-        try {
-            $targetPreCommit = $this->targetFolder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/pre-commit';
-            $filesystem->copy($this->targetFolder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/unix+mac/pre-commit', $targetPreCommit);
+        $source = $folder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/unix+mac/pre-commit';
+        $target = $folder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/pre-commit';
+        $filesystem->copy($source, $target);
 
-            if (!is_executable($targetPreCommit)) {
-                $filesystem->chmod($targetPreCommit, 0755);
-            }
-        } catch (IOException $e) {
-            $this->logger->warning('Exception:enablePreCommitHook:' . $e->getMessage());
+        if (!is_executable($target)) {
+            $filesystem->chmod($target, 0755);
         }
     }
 }
