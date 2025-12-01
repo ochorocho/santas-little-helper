@@ -55,7 +55,7 @@ jobs:
           ls -lah .github/
 
       - name: Pre-build dev container image
-        uses: devcontainers/ci@v0.2
+        uses: devcontainers/ci@v0.3
         env:
           # Workaround untagged images.
           # https://docs.docker.com/build/building/variables/#buildx_no_default_attestations
