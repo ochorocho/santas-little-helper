@@ -39,17 +39,19 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
 
-#      - name: Download all workflow run artifacts
-#        uses: actions/download-artifact@v5
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          pattern: slh-*
+          path: .github/.devcontainer/
 
       # Move compiled binaries (only given platforms)
       # next to the Dockerfile to consume it using COPY
       - name: Show and move files
         run: |
-          pwd
-          ls -lah dist/
-          cp -Rp dist/slh-linux-amd64 .github/.devcontainer/
-          cp -Rp dist/slh-linux-arm64 .github/.devcontainer/
+          mv .github/.devcontainer/slh-*/* .github/.devcontainer/
           ls -lah .github/.devcontainer/
 
       - name: Pre-build dev container image

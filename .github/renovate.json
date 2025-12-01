@@ -8,7 +8,7 @@
     "enabledManagers": ["composer", "dockerfile"],
     "packageRules": [
       {
-          "groupName": "TYPO3 CMS",
+          "groupName": "Composer packages",
           "matchManagers": ["composer"]
       }, {
         "groupName": "Docker",

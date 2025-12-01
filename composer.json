@@ -42,8 +42,7 @@
 		"build:prepare": [
 			"test -f dist/slh && rm dist/slh || true",
 			"test -d .cache || mkdir -p .cache",
-			"cd .cache/ && ../vendor/bin/spc download --with-php=8.4 xdebug",
-			"cd .cache/ && ../vendor/bin/spc craft ../craft.yml --debug"
+			"cd .cache/ && ../vendor/bin/spc craft ${CRAFT_CONFIG:-../craft.yml} --debug"
 		],
 		"build:phar": [
 			"test -f dist/slh.phar && rm dist/slh.phar || true",
@@ -53,8 +52,8 @@
 		],
 		"build:standalone": [
 			"test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
-			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m)",
-			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m) -v"
+			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/')",
+			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/') -v"
 		],
 		"build:clean": [
 			"rm -f dist/*",
