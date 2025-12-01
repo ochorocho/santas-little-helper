@@ -42,7 +42,7 @@
 		"build:prepare": [
 			"test -f dist/slh && rm dist/slh || true",
 			"test -d .cache || mkdir -p .cache",
-			"cd .cache/ && ../vendor/bin/spc craft ${CRAFT_CONFIG:-../craft.yml} --debug"
+			"cd .cache/ && ../vendor/bin/spc craft ${CRAFT_CONFIG:-../craft.yml} ${SLH_FLAG}"
 		],
 		"build:phar": [
 			"test -f dist/slh.phar && rm dist/slh.phar || true",

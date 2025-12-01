@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           composer global req humbug/box
-          composer run --timeout 1800 build
+          SLH_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run --timeout 1800 build
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v5.0.0

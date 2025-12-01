@@ -1,10 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04
 
-ARG TARGETPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
-ARG TARGETVARIANT
-RUN echo "I'm building for TARGETPLATFORM: $TARGETPLATFORM - TARGETARCH $TARGETARCH - TARGETVARIANT $TARGETVARIANT - TARGETOS $TARGETOS"
 
-# @todo: use dynamic architecture
-COPY ./slh-${TARGETOS}-${TARGETARCH} /usr/local/bin/slh
+COPY slh-${TARGETOS}-${TARGETARCH} /usr/local/bin/slh
