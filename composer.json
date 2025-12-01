@@ -54,7 +54,7 @@
 		"build:standalone": [
 			"test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
 			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m)",
-			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m) -v"
+			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/') -v"
 		],
 		"build:clean": [
 			"rm -f dist/*",

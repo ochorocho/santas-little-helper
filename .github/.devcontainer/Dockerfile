@@ -7,4 +7,4 @@ ARG TARGETVARIANT
 RUN echo "I'm building for TARGETPLATFORM: $TARGETPLATFORM - TARGETARCH $TARGETARCH - TARGETVARIANT $TARGETVARIANT - TARGETOS $TARGETOS"
 
 # @todo: use dynamic architecture
-COPY ./slh-${TARGETARCH} /usr/local/bin/slh
+COPY ./slh-${TARGETOS}-${TARGETARCH} /usr/local/bin/slh
