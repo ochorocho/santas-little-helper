@@ -45,14 +45,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
           pattern: slh-*
-          path: .github/.devcontainer/
+          path: .github/
 
       # Move compiled binaries (only given platforms)
       # next to the Dockerfile to consume it using COPY
       - name: Show and move files
         run: |
-          mv .github/.devcontainer/slh-*/* .github/.devcontainer/
-          ls -lah .github/.devcontainer/
+          mv .github/slh-*/* .github/
+          ls -lah .github/
 
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.2

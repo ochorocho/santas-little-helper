@@ -1,5 +1,5 @@
 {
-	"name": "TYPO3 SurfCamp 2025",
+	"name": "TYPO3 CMS",
 	// "dockerComposeFile": "docker-compose.yml",
 	// "service": "typo3",
 	"build": { "dockerfile": "Dockerfile" },
