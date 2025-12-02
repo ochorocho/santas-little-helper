@@ -51,8 +51,8 @@ jobs:
       # next to the Dockerfile to consume it using COPY
       - name: Show and move files
         run: |
-          mv .github/slh-*/* .github/
-          ls -lah .github/
+          mv .github/slh-*/* .github/.devcontainer/
+          ls -lah .github/.devcontainer/
 
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.3
