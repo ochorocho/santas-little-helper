@@ -33,7 +33,7 @@ class Composer extends Command
     {
         $args = $input->getArgument('args');
 
-        // If no arguments provided, show the main composer help
+        // If no arguments provided, show the composer help text
         if (empty($args)) {
             $args = [];
         }
