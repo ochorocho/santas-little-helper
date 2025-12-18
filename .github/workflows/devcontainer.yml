@@ -15,9 +15,14 @@ on:
 
 jobs:
   build-and-push:
-    name: "Build Image"
+    name: "Build Image ${{ matrix.php-version }}"
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.4"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -57,13 +62,14 @@ jobs:
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.3
         env:
-          # Workaround untagged images.
+          # Workaround for untagged images.
           # https://docs.docker.com/build/building/variables/#buildx_no_default_attestations
           BUILDX_NO_DEFAULT_ATTESTATIONS: true
+          PHP_VERSION: ${{ matrix.php-version }}
         with:
           platform: linux/amd64,linux/arm64
           subFolder: .github
           imageName: ghcr.io/${{ github.repository }}
-          imageTag: latest
+          imageTag: ${{ matrix.php-version }}
           cacheFrom: ghcr.io/${{ github.repository }}
           push: always

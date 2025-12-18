@@ -8,16 +8,19 @@ use Composer\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class ComposerService extends BaseService
 {
     protected Application $composerApplication;
+    protected Filesystem $fileSystem;
     public function __construct(protected ConsoleLogger $logger, private readonly string $targetFolder)
     {
         $this->composerApplication = new Application();
         $this->composerApplication->setAutoExit(false);
         $this->composerApplication->setCatchExceptions(false);
+        $this->fileSystem = new Filesystem();
 
         parent::__construct($logger);
     }
@@ -36,8 +39,15 @@ class ComposerService extends BaseService
      */
     public function setLocalCoreRepository(): void
     {
-        // Add local composer repository
+        // Add the local composer repository
         $composerInput = new StringInput('config repositories.typo3-core-packages path "' . BaseService::CORE_REPO_CACHE . '/typo3/sysext/*" -d ' . $this->targetFolder);
+        $this->runComposerCommand($composerInput);
+
+        // Add local packages composer repository
+        if(!$this->fileSystem->exists($this->targetFolder . '/packages')){
+            $this->fileSystem->mkdir($this->targetFolder . '/packages');
+        }
+        $composerInput = new StringInput('config repositories.packages path packages/* -d ' . $this->targetFolder);
         $this->runComposerCommand($composerInput);
 
         // Allow plugins

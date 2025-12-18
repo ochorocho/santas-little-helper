@@ -19,7 +19,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
-#          - "8.5"
+          - "8.5"
         runner:
           - "ubuntu-24.04"
           - "macos-15"
@@ -36,7 +36,7 @@ jobs:
       - name: "Setup PHP"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: ${{ matrix.php-version }}
           tools: pecl, composer, box
           ini-values: memory_limit=-1
 
@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           composer global req humbug/box
-          SLH_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run --timeout 1800 build
+          PHP_VERSION=${{ matrix.php-version }} SLH_CRAFT_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run --timeout 1800 build
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v5.0.0

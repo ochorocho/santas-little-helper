@@ -2,6 +2,10 @@
 
 ![Santas-Little-Helper.png](images/Santas-Little-Helper.png)
 
+## ToDos:
+
+  * `~/.santas-little-helper/bin/frankenphp trust` - trust ssl cert
+
 ## Build requirements
 
 * PHP >= 8.3

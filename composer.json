@@ -27,7 +27,6 @@
 		"crazywhalecc/static-php-cli": "^2.7",
 		"symfony/console": "^7.2",
 		"composer/composer": "^2.8",
-		"friendsofphp/php-cs-fixer": "^3.75",
 		"symfony/http-client": "^7.3"
 	},
 	"scripts": {
@@ -42,7 +41,9 @@
 		"build:prepare": [
 			"test -f dist/slh && rm dist/slh || true",
 			"test -d .cache || mkdir -p .cache",
-			"cd .cache/ && ../vendor/bin/spc craft ${CRAFT_CONFIG:-../craft.yml} ${SLH_FLAG}"
+			"echo ${PHP_VERSION:-8.4}",
+			"test -f crafts/craft.${PHP_VERSION:-8.4}.yml || (echo '[!!!] PHP version not configured, please create crafts/craft.${PHP_VERSION:-8.4}.yml first.' && exit 1)",
+			"cd .cache/ && ../vendor/bin/spc craft ../crafts/craft.${PHP_VERSION:-8.4}.yml ${SLH_CRAFT_FLAG}"
 		],
 		"build:phar": [
 			"test -f dist/slh.phar && rm dist/slh.phar || true",
@@ -52,8 +53,8 @@
 		],
 		"build:standalone": [
 			"test -f dist/slh.phar || (echo '[!!!] PHAR file does not exist, please run build:phar first.' && exit 1)",
-			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')",
-			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/') -v"
+			"cd .cache/ && ../vendor/bin/spc micro:combine ../dist/slh.phar --output ../dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')-${PHP_VERSION:-8.4}",
+			"dist/slh-$(uname -s | tr '[A-Z]' '[a-z]')-$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')-${PHP_VERSION:-8.4} -v"
 		],
 		"build:clean": [
 			"rm -f dist/*",
@@ -62,6 +63,7 @@
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^2.1",
-		"typo3/coding-standards": "^0.8.0"
+		"typo3/coding-standards": "^0.8.0",
+		"friendsofphp/php-cs-fixer": "^3.92"
 	}
 }
