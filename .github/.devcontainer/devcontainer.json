@@ -1,10 +1,10 @@
 {
 	"name": "TYPO3 CMS",
 	"build": {
-		"dockerfile": "Dockerfile",
-		args: {
-			PHP_VERSION: "${localEnv:PHP_VERSION}"
-		}
+		"dockerfile": "Dockerfile"
+	},
+	remoteEnv: {
+		"PHP_VERSION": "${localEnv:PHP_VERSION}"
 	},
 	"workspaceFolder": "/workspace",
 	"customizations": {
