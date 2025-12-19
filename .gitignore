@@ -6,3 +6,4 @@
 /bin/frankenphp
 /test
 /.php-cs-fixer.cache
+/.github/.devcontainer/slh-*

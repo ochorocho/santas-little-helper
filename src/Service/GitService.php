@@ -18,7 +18,7 @@ class GitService extends BaseService
 
     private string $git;
 
-    public function __construct(protected ConsoleLogger $logger, private readonly string $repository, private readonly string $targetFolder)
+    public function __construct(protected ConsoleLogger $logger, private readonly string $repository, private readonly string $targetFolder, private readonly bool $noInteraction)
     {
         $this->git = (new ExecutableFinder())->find('git');
         $this->pathService = new PathService();
@@ -109,7 +109,7 @@ EOF;
         }
 
         $process = new Process([$this->git, 'checkout', $branch], $this->targetFolder . '/' . self::CORE_REPO_CACHE);
-        $process->setTty(true);
+        $process->setTty(!$this->noInteraction);
         $process->setTimeout(null);
         $process->run();
 
@@ -125,7 +125,7 @@ EOF;
     public function pull(string $folder): void
     {
         $process = new Process([$this->git, 'pull'], $folder);
-        $process->setTty(true);
+        $process->setTty(!$this->noInteraction);
         $process->setTimeout(null);
         $process->run();
     }
@@ -133,7 +133,7 @@ EOF;
     private function setGitConfigValue(string $config, string $value): void
     {
         $process = new Process([$this->git, 'config', $config, $value], $this->targetFolder . '/' . self::CORE_REPO_CACHE);
-        $process->setTty(true);
+        $process->setTty(!$this->noInteraction);
         $process->setTimeout(null);
         $process->run();
 
@@ -150,7 +150,7 @@ EOF;
     public function cloneRepositoryToProjectFolder(string $url, string $repoTargetPath): Process
     {
         $process = new Process([$this->git, 'clone', $url, $repoTargetPath]);
-        $process->setTty(true);
+        $process->setTty(!$this->noInteraction);
         $process->setTimeout(null);
         $this->logger->notice('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
         $process->run();

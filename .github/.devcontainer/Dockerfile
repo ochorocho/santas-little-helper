@@ -3,5 +3,14 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04
 ARG TARGETOS
 ARG TARGETARCH
 ARG PHP_VERSION
+ENV DEBIAN_FRONTEND=noninteractive
+
+SHELL ["/usr/bin/bash", "-c"]
 
 COPY slh-${TARGETOS}-${TARGETARCH}-${PHP_VERSION} /usr/local/bin/slh
+RUN chmod +x /usr/local/bin/slh && \
+    cd / && \
+    echo 'eval "$(/usr/local/bin/slh completion bash)"' >> ~/.bashrc && \
+    source ~/.bashrc && \
+    SLH_USERNAME=ochorocho SLH_HOOK_CREATE=1 SLH_COMMIT_TEMPLATE="~/.santas-little-helper/gitmessage.txt" slh core:setup /workspace --no-interaction && \
+    rm -Rf /workspace && mkdir /workspace

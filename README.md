@@ -5,6 +5,8 @@
 ## ToDos:
 
   * `~/.santas-little-helper/bin/frankenphp trust` - trust ssl cert
+  * Add redis php module
+  * Enable and test xdebug
 
 ## Build requirements
 

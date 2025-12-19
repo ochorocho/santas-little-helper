@@ -20,7 +20,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -54,7 +53,7 @@ class CoreComposer extends Command
         $this->logger = ConsoleLoggerFactory::create($io);
 
         // Download repository and checkout branch
-        $gitService = new GitService($this->logger, $input->getArgument('repository'), $input->getArgument('target-folder'));
+        $gitService = new GitService($this->logger, $input->getArgument('repository'), $input->getArgument('target-folder'), $input->getOption('no-interaction'));
         $gitService->cloneRepository($input->getArgument('repository'), (bool)$input->getOption('clone-new'));
         $gitService->checkoutBranch($input->getArgument('branch'));
 
@@ -71,7 +70,7 @@ class CoreComposer extends Command
             $commitTemplatePath = $io->ask('Set TYPO3 commit message template?', $templatePath);
         }
 
-        // Create commit message template if
+        // Create a commit message template if
         // the target file path does not exist
         if (!is_file($commitTemplatePath)) {
             $createTemplate = $io->confirm('The commit message template file does not exist, do you want me to create it?', $commitTemplatePath);
@@ -102,9 +101,8 @@ class CoreComposer extends Command
         $command->setup();
         $command->styleguideGenerate();
 
-        $this->logger->notice('🥳🥳🥳Happy days ... TYPO3 Composer CoreDev Setup done!🥳🥳🥳');
+        $this->logger->notice('🧟 Happy days ... TYPO3 Composer CoreDev Setup done!');
         // @todo: sort methods - gather data first, then process all at once
-        // @todo: Initialize styleguide
         // @todo: Fix git issue when repo does already exist. Do not clone.
 
         return Command::SUCCESS;
