@@ -7,6 +7,7 @@ namespace Ochorocho\SantasLittleHelper\Service;
 use Composer\Script\Event;
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 class CommonService extends BaseService
 {
@@ -32,25 +33,28 @@ class CommonService extends BaseService
         }
 
         // Test git push url
-        $process = new ProcessExecutor();
-        $command = 'git config --get remote.origin.pushurl';
-        $output = '';
-        $process->execute($command, $output, $this->coreDevFolder);
+        // $process = new ProcessExecutor();
+        $process = new Process(['git', 'config', '--get', 'remote.origin.pushurl'], $this->coreDevFolder);
+        $process->setTty(false);
+        $process->run();
 
-        preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $output, $matches);
+        preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $process->getOutput(), $matches);
         if (!empty($matches)) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Git "remote.origin.pushurl" seems correct.');
         } else {
+            // @todo: Provide command to configure git
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "remote.origin.pushurl" not set correctly, please run "composer tdk:set-git-config".');
         }
 
         // Test commit template
-        $commandTemplate = 'git config --get commit.template';
-        $process->execute($commandTemplate, $outputTemplate, $this->coreDevFolder);
+        $processCommitTemplate = new Process(['git', 'config', '--get', 'commit.template'], $this->coreDevFolder);
+        $processCommitTemplate->setTty(false);
+        $processCommitTemplate->run();
 
         if (!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Git "commit.template" is set to ' . trim($outputTemplate) . '.');
         } else {
+            // @todo: Provide command to set the commit template
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "commit.template" not set or file does not exist, please run "composer tdk:set-commit-template"');
         }
 

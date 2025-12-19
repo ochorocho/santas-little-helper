@@ -43,7 +43,8 @@ class Php extends Command
         $args = $input->getArgument('args') ?? [];
         // @todo: Verify if this is working for args and options!
         $process = new Process([$phpBinary, 'php-cli', $script, ...$args]);
-        $process->setTty(true);
+//        $process->setTty(true);
+        $process->setTty(false);
         $output->writeln(['<comment>Running command:</comment>', $process->getCommandLine(), '']);
         $process->setTimeout(null);
         $process->start();

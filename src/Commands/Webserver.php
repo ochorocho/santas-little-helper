@@ -63,7 +63,8 @@ class Webserver extends Command
         }
 
         $process = new Process([$phpBinary, 'run', ...$args]);
-        $process->setTty(true);
+//        $process->setTty(true);
+        $process->setTty(false);
         $process->setTimeout(null);
         $output->writeln(['<comment>Running command:</comment>', $process->getCommandLine(), '']);
         $process->start();

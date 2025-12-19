@@ -65,7 +65,8 @@ readonly class CommandService
             ],
             $this->targetFolder
         );
-        $process->setTty(true);
+//        $process->setTty(true);
+        $process->setTty(false);
         $process->setTimeout(null);
         $process->start();
 
