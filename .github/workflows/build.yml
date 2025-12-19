@@ -68,10 +68,12 @@ jobs:
 
       - name: Get OS name
         id: os
-        run: echo "name=$(uname -s | tr '[A-Z]' '[a-z]')" >> $GITHUB_OUTPUT
+        run: |
+          echo "name=$(uname -s | tr '[A-Z]' '[a-z]')" >> $GITHUB_OUTPUT
+          echo "arch=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/')" >> $GITHUB_OUTPUT
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: slh-${{ steps.os.outputs.name }}-${{ matrix.php-version }}
+          name: slh-${{ steps.os.outputs.name }}-${{ steps.os.outputs.arch }}-${{ matrix.php-version }}
           path: 'dist/slh-*'
