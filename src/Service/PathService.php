@@ -67,17 +67,20 @@ class PathService
         }
 
         // Linux, macOS
-        if (function_exists('posix_getpwuid')) {
-            return posix_getpwuid(getmyuid())['dir'];
+        if (!empty($_SERVER['HOME'])) {
+            return $_SERVER['HOME'];
         }
 
-        if (($_SERVER['HOME'] ?? '') !== '') {
-            return $_SERVER['HOME'];
+        // Fallback to posix if HOME is not set
+        if (function_exists('posix_getpwuid')) {
+            $homeDir = posix_getpwuid(getmyuid())['dir'] ?? null;
+            if ($homeDir !== null) {
+                return $homeDir;
+            }
         }
 
         throw new RuntimeException('Home directory not found.');
     }
-
     private function getPharPath(): string
     {
         return $_SERVER['SCRIPT_NAME'];
