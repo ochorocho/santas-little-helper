@@ -55,6 +55,7 @@ Releases: main
 EOF;
 
         try {
+            $this->fileSystem->mkdir(dirname($path));
             $this->fileSystem->dumpFile($path, $content);
         } catch (IOException $e) {
             $this->logger->error('<error>Failed to create the commit template ' . $path . '</error>');

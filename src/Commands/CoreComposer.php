@@ -61,7 +61,7 @@ class CoreComposer extends Command
         $userData = $this->getUserData($io);
         $gitService->setGitConfig($userData);
 
-        // Validate Gerrit/my.typo3.org username
+        // Set commit message template
         if (getenv('SLH_COMMIT_TEMPLATE')) {
             $commitTemplatePath = getenv('SLH_COMMIT_TEMPLATE');
         } else {

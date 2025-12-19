@@ -63,19 +63,19 @@ class PathService
     {
         // Windows
         if (PHP_OS_FAMILY === 'Windows') {
-            return $_SERVER['USERPROFILE'] ?? $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'];
+            return realpath($_SERVER['USERPROFILE'] ?? $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH']);
         }
 
         // Linux, macOS
         if (!empty($_SERVER['HOME'])) {
-            return $_SERVER['HOME'];
+            return realpath($_SERVER['HOME']);
         }
 
         // Fallback to posix if HOME is not set
         if (function_exists('posix_getpwuid')) {
             $homeDir = posix_getpwuid(getmyuid())['dir'] ?? null;
             if ($homeDir !== null) {
-                return $homeDir;
+                return realpath($homeDir);
             }
         }
 
