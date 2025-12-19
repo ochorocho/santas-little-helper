@@ -8,5 +8,7 @@ download-options:
   prefer-pre-built: true
 build-options:
   enable-zts: true
+  with-suggested-libs: false
+  with-suggested-exts: false
   with-hardcoded-ini: ["memory_limit=4G", "max_input_vars=1500"]
 #  build-shared: "xdebug"
