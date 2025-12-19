@@ -65,8 +65,7 @@ readonly class CommandService
             ],
             $this->targetFolder
         );
-//        $process->setTty(true);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
         $process->start();
 

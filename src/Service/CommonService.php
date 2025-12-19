@@ -33,9 +33,8 @@ class CommonService extends BaseService
         }
 
         // Test git push url
-        // $process = new ProcessExecutor();
         $process = new Process(['git', 'config', '--get', 'remote.origin.pushurl'], $this->coreDevFolder);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->run();
 
         preg_match('/^ssh:\/\/(.*)@review\.typo3\.org/', $process->getOutput(), $matches);
@@ -48,7 +47,7 @@ class CommonService extends BaseService
 
         // Test commit template
         $processCommitTemplate = new Process(['git', 'config', '--get', 'commit.template'], $this->coreDevFolder);
-        $processCommitTemplate->setTty(false);
+        $processCommitTemplate->setTty(Process::isTtySupported());
         $processCommitTemplate->run();
 
         if (!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {

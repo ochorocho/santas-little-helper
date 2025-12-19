@@ -109,8 +109,7 @@ EOF;
         }
 
         $process = new Process([$this->git, 'checkout', $branch], $this->targetFolder . '/' . self::CORE_REPO_CACHE);
-//        $process->setTty(!$this->noInteraction);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
         $process->run();
 
@@ -126,8 +125,7 @@ EOF;
     public function pull(string $folder): void
     {
         $process = new Process([$this->git, 'pull'], $folder);
-//        $process->setTty(!$this->noInteraction);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
         $process->run();
     }
@@ -135,8 +133,7 @@ EOF;
     private function setGitConfigValue(string $config, string $value): void
     {
         $process = new Process([$this->git, 'config', $config, $value], $this->targetFolder . '/' . self::CORE_REPO_CACHE);
-        // $process->setTty(!$this->noInteraction);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
         $process->run();
 
@@ -153,8 +150,7 @@ EOF;
     public function cloneRepositoryToProjectFolder(string $url, string $repoTargetPath): Process
     {
         $process = new Process([$this->git, 'clone', $url, $repoTargetPath]);
-        // $process->setTty(!$this->noInteraction);
-        $process->setTty(false);
+        $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
         $this->logger->notice('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
         $process->run();
