@@ -42,6 +42,10 @@ class GitService extends BaseService
     public function setCommitTemplate(string $path): void
     {
         $template = realpath($path);
+        if($template === false) {
+            $this->fileSystem->mkdir(dirname($path));
+        }
+
         $this->setGitConfigValue('commit.template', $template);
     }
 
