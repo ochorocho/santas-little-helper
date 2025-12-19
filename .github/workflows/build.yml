@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           composer global req humbug/box
-          PHP_VERSION=${{ matrix.php-version }} SLH_CRAFT_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run --timeout 1800 build
+          PHP_VERSION=${{ matrix.php-version }} SLH_CRAFT_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run build
 
       - name: Get OS name
         id: os
