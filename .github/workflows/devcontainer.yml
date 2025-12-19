@@ -1,11 +1,5 @@
 name: DevContainer
 on:
-  #workflow_dispatch:
-  push:
-    branches:
-      - "main"
-    tags:
-      - "v*.*.*"
   workflow_run:
     workflows: ["Build"]
     types:
@@ -23,6 +17,7 @@ jobs:
       matrix:
         php-version:
           - "8.4"
+          - "8.5"
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:

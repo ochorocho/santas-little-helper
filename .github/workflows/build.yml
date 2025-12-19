@@ -1,7 +1,6 @@
 name: Build
 
 on:
-  #workflow_dispatch:
   push:
     branches:
       - "main"
@@ -25,8 +24,6 @@ jobs:
           - "macos-15"
           - "ubuntu-24.04-arm"
 #          - "macos-15-intel"
-#        exclude:
-#          - { runner: "ubuntu-latest", combination: "gnu-bulk" }
 
     steps:
       - name: Checkout
