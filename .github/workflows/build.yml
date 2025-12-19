@@ -30,6 +30,17 @@ jobs:
         id: checkout
         uses: actions/checkout@v1
 
+      - name: Install libidn2 (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libidn2-dev
+
+      - name: Install libidn2 (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install libidn2
+
       - name: "Setup PHP"
         uses: shivammathur/setup-php@v2
         with:
@@ -37,12 +48,12 @@ jobs:
           tools: pecl, composer, box
           ini-values: memory_limit=-1
 
-      - name: Install packages
+      - name: Install composer packages
         shell: bash
         run: composer install
 
       # Cache stuff
-      - name: "Cache composer packages"
+      - name: Cache composer packages
         id: composer-cache
         uses: actions/cache@v4
         with:
