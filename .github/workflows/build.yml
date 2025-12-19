@@ -66,13 +66,12 @@ jobs:
           composer global req humbug/box
           PHP_VERSION=${{ matrix.php-version }} SLH_CRAFT_FLAG="${ACTIONS_STEP_DEBUG:+--debug}" composer run --timeout 1800 build
 
+      - name: Get OS name
+        id: os
+        run: echo "name=$(uname -s | tr '[A-Z]' '[a-z]')" >> $GITHUB_OUTPUT
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: slh-${{ matrix.php-version }}-${{ matrix.runner }}
+          name: slh-${{ steps.os.outputs.name }}-${{ matrix.php-version }}
           path: 'dist/slh-*'
-
-      - name: Show and move files
-        run: |
-          pwd
-          ls -lah dist/
