@@ -69,6 +69,8 @@ EOF;
                 // Resolve home directory
                 if(str_starts_with($path, '~')) {
                     $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
+                } else {
+                    $absolutePath = $path;
                 }
 
                 $this->fileSystem->mkdir(dirname($absolutePath));
