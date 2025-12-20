@@ -11,7 +11,9 @@ COPY slh-${TARGETOS}-${TARGETARCH}-${PHP_VERSION} /usr/local/bin/slh
 
 USER vscode
 
-RUN sudo chmod +x /usr/local/bin/slh && \
+RUN sudo apt update && \
+    sudo apt install -y cron && \
+    sudo chmod +x /usr/local/bin/slh && \
     cd / && \
     echo 'eval "$(/usr/local/bin/slh completion zsh)"' >> ~/.zshrc && \
     source ~/.zshrc && \
@@ -20,7 +22,9 @@ RUN sudo chmod +x /usr/local/bin/slh && \
     SLH_USERNAME=ochorocho SLH_HOOK_CREATE=1 SLH_COMMIT_TEMPLATE="~/.santas-little-helper/gitmessage.txt" slh core:setup /workspace --no-interaction && \
     sudo rm -Rf /workspace && \
     sudo mkdir /workspace && \
-    sudo chown -R vscode:vscode /workspace
+    sudo chown -R vscode:vscode /workspace && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set zsh as default shell
 RUN /bin/zsh ~/.zshrc
