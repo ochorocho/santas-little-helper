@@ -22,5 +22,7 @@ RUN sudo chmod +x /usr/local/bin/slh && \
     sudo mkdir /workspace && \
     sudo chown -R vscode:vscode /workspace
 
+# Set zsh as default shell
+RUN /bin/zsh ~/.zshrc
 
 WORKDIR /workspace
