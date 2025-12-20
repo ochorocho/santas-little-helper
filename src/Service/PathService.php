@@ -59,7 +59,7 @@ class PathService
         throw new RuntimeException('Could not create folder ' . $this->getHomeDirectory() . '/' . $this->configFolder);
     }
 
-    private function getHomeDirectory(): string
+    public function getHomeDirectory(): string
     {
         // Windows
         if (PHP_OS_FAMILY === 'Windows') {

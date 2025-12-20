@@ -30,17 +30,6 @@ jobs:
         id: checkout
         uses: actions/checkout@v1
 
-      - name: Install libidn2 (Ubuntu)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libidn2-dev
-
-      - name: Install libidn2 (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install libidn2
-
       - name: "Setup PHP"
         uses: shivammathur/setup-php@v2
         with:

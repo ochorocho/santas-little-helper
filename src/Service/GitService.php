@@ -41,12 +41,17 @@ class GitService extends BaseService
 
     public function setCommitTemplate(string $path): void
     {
-        $template = realpath($path);
-        if($template === false) {
-            $this->fileSystem->mkdir(dirname($path));
+        $absolutePath = realpath($path);
+        if($absolutePath === false) {
+            // Resolve home directory
+            if(str_starts_with($path, '~')) {
+                $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
+            }
+
+            $this->fileSystem->mkdir(dirname($absolutePath));
         }
 
-        $this->setGitConfigValue('commit.template', $template);
+        $this->setGitConfigValue('commit.template', $absolutePath);
     }
 
     public function createCommitTemplate(string $path): void
@@ -59,7 +64,15 @@ Releases: main
 EOF;
 
         try {
-            $this->fileSystem->mkdir(dirname($path));
+            $absolutePath = realpath($path);
+            if($absolutePath === false) {
+                // Resolve home directory
+                if(str_starts_with($path, '~')) {
+                    $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
+                }
+
+                $this->fileSystem->mkdir(dirname($absolutePath));
+            }
             $this->fileSystem->dumpFile($path, $content);
         } catch (IOException $e) {
             $this->logger->error('<error>Failed to create the commit template ' . $path . '</error>');

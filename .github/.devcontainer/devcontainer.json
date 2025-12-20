@@ -6,7 +6,7 @@
 			"PHP_VERSION": "${localEnv:PHP_VERSION}"
 		}
 	},
-	remoteEnv: {
+	"remoteEnv": {
 		"PHP_VERSION": "${localEnv:PHP_VERSION}"
 	},
 	"workspaceFolder": "/workspace",
