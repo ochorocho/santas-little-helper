@@ -4,6 +4,7 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG PHP_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
+ENV WORKSPACE_PATH=/workspaces/typo3-devcontainer
 
 SHELL ["/usr/bin/zsh", "-c"]
 
@@ -17,16 +18,16 @@ RUN sudo apt update && \
     cd / && \
     echo 'eval "$(/usr/local/bin/slh completion zsh)"' >> ~/.zshrc && \
     source ~/.zshrc && \
-    sudo mkdir /workspace && \
-    sudo chown -R vscode:vscode /workspace && \
-    SLH_USERNAME=ochorocho SLH_HOOK_CREATE=1 SLH_COMMIT_TEMPLATE="/home/vscode/.santas-little-helper/gitmessage.txt" slh core:setup /workspace --no-interaction && \
-    sudo rm -Rf /workspace && \
-    sudo mkdir /workspace && \
-    sudo chown -R vscode:vscode /workspace && \
+    sudo mkdir -p ${WORKSPACE_PATH} && \
+    sudo chown -R vscode:vscode ${WORKSPACE_PATH} && \
+    SLH_USERNAME=ochorocho SLH_HOOK_CREATE=1 SLH_COMMIT_TEMPLATE="/home/vscode/.santas-little-helper/gitmessage.txt" slh core:setup ${WORKSPACE_PATH} --no-interaction && \
+    sudo rm -Rf ${WORKSPACE_PATH} && \
+    sudo mkdir -p ${WORKSPACE_PATH} && \
+    sudo chown -R vscode:vscode /${WORKSPACE_PATH} && \
     sudo apt clean && \
     sudo rm -rf /var/lib/apt/lists/*
 
 # Set zsh as default shell
 RUN /bin/zsh ~/.zshrc
 
-WORKDIR /workspace
+WORKDIR /workspaces/typo3-devcontainer

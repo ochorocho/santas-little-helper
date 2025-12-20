@@ -18,7 +18,7 @@ class PathService
             $configFolder = $this->createConfigFolder();
         }
 
-        return $configFolder;
+        return realpath($configFolder);
     }
 
     public function getConfigPath(): string
