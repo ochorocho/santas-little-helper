@@ -1,7 +1,7 @@
 # Set via cli in composer run script.
 php-version: 8.5
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,pdo,pdo_pgsql,pgsql,mysqlnd,pdo_mysql,sqlite3,pdo_sqlite,sodium"
-libs: freetype,libavif,libjpeg,libwebp,brotli
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,pdo,pdo_pgsql,pgsql,mysqlnd,pdo_mysql,sqlite3,pdo_sqlite,sodium,xmlwriter,xmlreader"
+libs: freetype,libavif,libjpeg,libwebp,brotli,libxml2,libiconv
 libc: glibc
 sapi: micro,frankenphp
 download-options:

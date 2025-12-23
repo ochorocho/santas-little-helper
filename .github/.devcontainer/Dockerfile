@@ -25,7 +25,8 @@ RUN sudo apt update && \
     sudo mkdir -p ${WORKSPACE_PATH} && \
     sudo chown -R vscode:vscode /${WORKSPACE_PATH} && \
     sudo apt clean && \
-    sudo rm -rf /var/lib/apt/lists/*
+    sudo rm -rf /var/lib/apt/lists/* && \
+    sudo rm -Rf /home/vscode/.santas-little-helper/bin
 
 # Set zsh as default shell
 RUN /bin/zsh ~/.zshrc

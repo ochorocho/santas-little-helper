@@ -1,6 +1,6 @@
 # Set via cli in composer run script.
 php-version: 8.3
-extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,pdo,pdo_pgsql,pgsql,mysqlnd,pdo_mysql,sqlite3,pdo_sqlite,sodium"
+extensions: "bcmath,filter,mbstring,mbregex,phar,zlib,openssl,tokenizer,posix,simplexml,xml,dom,xml,zip,zlib,pdo,intl,curl,iconv,session,gd,fileinfo,exif,pdo,pdo_pgsql,pgsql,mysqlnd,pdo_mysql,sqlite3,pdo_sqlite,sodium,xmlwriter,xmlreader"
 libs: freetype,libavif,libjpeg,libwebp,brotli
 libc: glibc
 sapi: micro,frankenphp
