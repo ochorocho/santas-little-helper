@@ -36,8 +36,7 @@ class Webserver extends Command
         $logger = new ConsoleLogger($output);
         // todo: sane defaults for .env and Caddyfile
         //       only write files if they do not exist?!?!
-        $phpBinary = $this->pathService->getConfigFolder() . '/bin/frankenphp';
-        $this->pathService->pharExtractFileToConfigBin('bin/frankenphp');
+        $phpBinary = $this->pathService->getFrankenPhpBinary();
         $configPath = realpath($input->getOption('config'));
         if (!$configPath) {
             $logger->error('Config file not found: ' . $input->getOption('config'));

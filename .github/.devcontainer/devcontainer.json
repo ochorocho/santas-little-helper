@@ -1,23 +1,37 @@
 {
-	"name": "TYPO3 CMS",
+	"name": "TYPO3 Core Dev",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
 			"PHP_VERSION": "${localEnv:PHP_VERSION}"
 		}
 	},
-	"remoteEnv": {
-		"PHP_VERSION": "${localEnv:PHP_VERSION}"
+	"containerEnv": {
+		"SLH_USERNAME": "${localEnv:SLH_USERNAME}",
+		"SLH_HOOK_CREATE": "1",
+		"SLH_COMMIT_TEMPLATE": "/home/vscode/.santas-little-helper/gitmessage.txt"
 	},
-	"workspaceFolder": "/workspace",
+	"workspaceFolder": "/workspaces/typo3-core-dev",
+	"init": true,
+	"remoteUser": "vscode",
+	"forwardPorts": [8888, 8884, 8025],
+	"portsAttributes": {
+		"8888": { "label": "TYPO3 HTTP", "onAutoForward": "notify" },
+		"8884": { "label": "TYPO3 HTTPS", "onAutoForward": "notify" },
+		"8025": { "label": "Mailpit UI", "onAutoForward": "notify" }
+	},
+	"onCreateCommand": "slh core:setup /workspaces/typo3-core-dev --no-interaction",
+	"postStartCommand": "cp -n /usr/local/share/slh-templates/Caddyfile /workspaces/typo3-core-dev/Caddyfile 2>/dev/null; cp -n /usr/local/share/slh-templates/.env /workspaces/typo3-core-dev/.env 2>/dev/null; cd /workspaces/typo3-core-dev && nohup slh webserver > /tmp/frankenphp.log 2>&1 &",
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-azuretools.vscode-docker"
+				"ms-azuretools.vscode-docker",
+				"bmewburn.vscode-intelephense-client",
+				"xdebug.php-debug",
+				"editorconfig.editorconfig"
 			]
 		}
 	},
-	"remoteUser": "vscode",
 	"features": {
 		"ghcr.io/skriptfabrik/devcontainer-features/mailpit:1": {}
 	}

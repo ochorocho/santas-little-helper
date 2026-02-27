@@ -32,8 +32,7 @@ class Php extends Command
     {
         $logger = new ConsoleLogger($output);
 
-        $phpBinary = $this->pathService->getConfigFolder() . '/bin/frankenphp';
-        $this->pathService->pharExtractFileToConfigBin('bin/frankenphp');
+        $phpBinary = $this->pathService->getFrankenPhpBinary();
         $script = realpath($input->getArgument('script'));
         if (!$script) {
             $logger->error('Failed to execute file ' . $input->getArgument('script') . ', because it was not found.');

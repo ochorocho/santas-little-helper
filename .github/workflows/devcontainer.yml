@@ -54,6 +54,11 @@ jobs:
           mv .github/slh-*/* .github/.devcontainer/
           ls -lah .github/.devcontainer/
 
+      - name: Copy webserver templates
+        run: |
+          cp templates/Caddyfile .github/.devcontainer/
+          cp templates/.env .github/.devcontainer/env-template
+
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.3
         env:
