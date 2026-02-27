@@ -1,0 +1,44 @@
+# Builder image: produces a standalone Linux slh binary from the PHAR.
+# This is only used for local builds — CI builds the binary natively.
+
+FROM php:8.4-cli AS builder
+
+ARG PHP_VERSION=8.4
+ARG GITHUB_TOKEN=""
+
+# Install all tools required by static-php-cli (spc doctor)
+RUN apt-get update && apt-get install -y \
+    git curl unzip \
+    bison flex automake autopoint cmake libtool patchelf \
+    pkg-config build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+# Install composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy project files needed for SPC build
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --prefer-dist 2>/dev/null || composer install --prefer-dist
+
+COPY crafts/ crafts/
+COPY dist/slh.phar dist/slh.phar
+
+# Run SPC craft — allow the embed sanity check to fail since we only need
+# micro.sfx and frankenphp, which are built before the validation step.
+RUN mkdir -p .cache && \
+    cd .cache && \
+    GITHUB_TOKEN="${GITHUB_TOKEN}" ../vendor/bin/spc craft ../crafts/craft.${PHP_VERSION}.yml || true
+
+# Verify the binaries we need were actually built
+RUN test -f .cache/buildroot/bin/micro.sfx || (echo "micro.sfx not found — SPC build failed" && exit 1)
+
+# Combine micro SAPI with the PHAR to produce the standalone binary
+RUN mkdir -p /out && \
+    ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/') && \
+    cd .cache && \
+    php -d memory_limit=512M ../vendor/bin/spc micro:combine ../dist/slh.phar \
+        --output /out/slh-linux-${ARCH}-${PHP_VERSION}
+
+RUN chmod +x /out/slh-*
