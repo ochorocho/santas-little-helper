@@ -31,6 +31,18 @@ class PathService
         return $this->getHomeDirectory() . '/' . $this->configFolder;
     }
 
+    public function getFrankenPhpBinary(): string
+    {
+        $configFolder = $this->getConfigFolder();
+        $binaryPath = $configFolder . '/bin/frankenphp';
+
+        if (!is_file($binaryPath) || !is_executable($binaryPath)) {
+            $this->pharExtractFileToConfigBin('bin/frankenphp');
+        }
+
+        return $binaryPath;
+    }
+
     public function pharExtractFileToConfigBin(string $path): void
     {
         $configFolder = $this->getConfigFolder();
@@ -42,11 +54,9 @@ class PathService
         }
 
         $filePath = $configFolder . '/' . $path;
-        //        if(!file_exists($filePath)) {
         $phar = new \Phar('phar://' . $this->getPharPath());
         $phar->extractTo($configFolder, $path, true);
         chmod($filePath, 0755);
-        //        }
     }
 
     private function createConfigFolder(): string

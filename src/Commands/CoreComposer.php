@@ -43,7 +43,8 @@ class CoreComposer extends Command
             ->addArgument('target-folder', InputArgument::REQUIRED, 'The target folder to create the project')
             ->addArgument('repository', InputArgument::OPTIONAL, 'Repository', 'https://github.com/TYPO3/typo3.git')
             ->addArgument('branch', InputArgument::OPTIONAL, 'Branch name', 'main')
-            ->addOption('clone-new', 'cn', InputOption::VALUE_NONE, 'Do not use the repository cache. Clone the entire repository.');
+            ->addOption('clone-new', 'cn', InputOption::VALUE_NONE, 'Do not use the repository cache. Clone the entire repository.')
+            ->addOption('cache-only', null, InputOption::VALUE_NONE, 'Only warm the repository cache, skip full setup');
         $this->setHelp('Download and install TYPO3 core.');
     }
 
@@ -56,6 +57,11 @@ class CoreComposer extends Command
         $gitService = new GitService($this->logger, $input->getArgument('repository'), $input->getArgument('target-folder'), $input->getOption('no-interaction'));
         $gitService->cloneRepository($input->getArgument('repository'), (bool)$input->getOption('clone-new'));
         $gitService->checkoutBranch($input->getArgument('branch'));
+
+        if ($input->getOption('cache-only')) {
+            $this->logger->notice('Repository cache warmed successfully.');
+            return Command::SUCCESS;
+        }
 
         // Get Gerrit/my.typo3.org username
         $userData = $this->getUserData($io);

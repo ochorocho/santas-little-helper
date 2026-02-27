@@ -58,8 +58,7 @@ readonly class CommandService
      */
     private function run(array $arguments): void
     {
-        $this->pathService->pharExtractFileToConfigBin('bin/frankenphp');
-        $phpBinary = $this->pathService->getConfigFolder() . '/bin/frankenphp';
+        $phpBinary = $this->pathService->getFrankenPhpBinary();
         $process = new Process(
             [$phpBinary, ...$arguments,
             ],

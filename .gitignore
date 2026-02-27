@@ -7,3 +7,5 @@
 /test
 /.php-cs-fixer.cache
 /.github/.devcontainer/slh-*
+/.github/.devcontainer/Caddyfile
+/.github/.devcontainer/env-template
