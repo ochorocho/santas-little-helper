@@ -44,7 +44,7 @@ class ComposerService extends BaseService
         $this->runComposerCommand($composerInput);
 
         // Add local packages composer repository
-        if(!$this->fileSystem->exists($this->targetFolder . '/packages')){
+        if (!$this->fileSystem->exists($this->targetFolder . '/packages')) {
             $this->fileSystem->mkdir($this->targetFolder . '/packages');
         }
         $composerInput = new StringInput('config repositories.packages path packages/* -d ' . $this->targetFolder);

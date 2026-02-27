@@ -9,8 +9,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class HookService extends BaseService
 {
+    private Filesystem $fileSystem;
+
     public function __construct(protected ConsoleLogger $logger)
     {
+        $this->fileSystem = new Filesystem();
         parent::__construct($logger);
     }
 
@@ -22,34 +25,30 @@ class HookService extends BaseService
 
     public function remove(): void
     {
-        $filesystem = new Filesystem();
-        $filesystem->remove([
-            $this->coreDevFolder . '/.git/hooks/pre-commit',
-            $this->coreDevFolder . '/.git/hooks/commit-msg',
+        $this->fileSystem->remove([
+            self::CORE_REPO_CACHE . '/.git/hooks/pre-commit',
+            self::CORE_REPO_CACHE . '/.git/hooks/commit-msg',
         ]);
     }
 
     private function enableCommitMessage(string $folder): void
     {
-        $filesystem = new Filesystem();
-
         $targetCommitMsg = $folder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/commit-msg';
-        $filesystem->copy($folder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/commit-msg', $targetCommitMsg);
+        $this->fileSystem->copy($folder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/commit-msg', $targetCommitMsg);
 
         if (!is_executable($targetCommitMsg)) {
-            $filesystem->chmod($targetCommitMsg, 0755);
+            $this->fileSystem->chmod($targetCommitMsg, 0755);
         }
     }
 
     private function enablePreCommit(string $folder): void
     {
-        $filesystem = new Filesystem();
         $source = $folder . '/' . self::CORE_REPO_CACHE . '/Build/git-hooks/unix+mac/pre-commit';
         $target = $folder . '/' . self::CORE_REPO_CACHE . '/.git/hooks/pre-commit';
-        $filesystem->copy($source, $target);
+        $this->fileSystem->copy($source, $target);
 
         if (!is_executable($target)) {
-            $filesystem->chmod($target, 0755);
+            $this->fileSystem->chmod($target, 0755);
         }
     }
 }

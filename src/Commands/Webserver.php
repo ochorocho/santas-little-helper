@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ochorocho\SantasLittleHelper\Commands;
 
+use Ochorocho\SantasLittleHelper\Factory\ConsoleLoggerFactory;
 use Ochorocho\SantasLittleHelper\Service\PathService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -33,7 +35,7 @@ class Webserver extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $logger = new ConsoleLogger($output);
+        $logger = ConsoleLoggerFactory::create($output);
         // todo: sane defaults for .env and Caddyfile
         //       only write files if they do not exist?!?!
         $phpBinary = $this->pathService->getFrankenPhpBinary();
@@ -71,6 +73,6 @@ class Webserver extends Command
             $output->write($data);
         }
 
-        return Command::SUCCESS;
+        return $process->isSuccessful() ? Command::SUCCESS : Command::FAILURE;
     }
 }

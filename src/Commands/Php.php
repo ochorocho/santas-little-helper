@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ochorocho\SantasLittleHelper\Commands;
 
+use Ochorocho\SantasLittleHelper\Factory\ConsoleLoggerFactory;
 use Ochorocho\SantasLittleHelper\Service\PathService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -30,8 +32,7 @@ class Php extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $logger = new ConsoleLogger($output);
-
+        $logger = ConsoleLoggerFactory::create($output);
         $phpBinary = $this->pathService->getFrankenPhpBinary();
         $script = realpath($input->getArgument('script'));
         if (!$script) {
@@ -51,6 +52,6 @@ class Php extends Command
             $output->write($data);
         }
 
-        return Command::SUCCESS;
+        return $process->isSuccessful() ? Command::SUCCESS : Command::FAILURE;
     }
 }

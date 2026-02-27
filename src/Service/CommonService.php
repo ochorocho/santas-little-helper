@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ochorocho\SantasLittleHelper\Service;
 
 use Composer\Script\Event;
-use Composer\Util\ProcessExecutor;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
@@ -16,7 +15,7 @@ class CommonService extends BaseService
         $filesystem = new Filesystem();
 
         // Test for existing repository
-        if ($filesystem->exists($this->coreDevFolder . '/.git')) {
+        if ($filesystem->exists(self::CORE_REPO_CACHE . '/.git')) {
             $event->getIO()->write('<fg=green;options=bold>✔</> Repository exists.');
         } else {
             $event->getIO()->write('<fg=red;options=bold>✘</> TYPO3 Repository not in place, please run "composer tdk:clone"');
@@ -24,8 +23,8 @@ class CommonService extends BaseService
 
         // Test if hooks are set up
         if ($filesystem->exists([
-            $this->coreDevFolder . '/.git/hooks/pre-commit',
-            $this->coreDevFolder . '/.git/hooks/commit-msg',
+            self::CORE_REPO_CACHE . '/.git/hooks/pre-commit',
+            self::CORE_REPO_CACHE . '/.git/hooks/commit-msg',
         ])) {
             $event->getIO()->write('<fg=green;options=bold>✔</> All hooks are in place.');
         } else {
@@ -33,7 +32,7 @@ class CommonService extends BaseService
         }
 
         // Test git push url
-        $process = new Process(['git', 'config', '--get', 'remote.origin.pushurl'], $this->coreDevFolder);
+        $process = new Process(['git', 'config', '--get', 'remote.origin.pushurl'], self::CORE_REPO_CACHE);
         $process->setTty(Process::isTtySupported());
         $process->run();
 
@@ -46,12 +45,13 @@ class CommonService extends BaseService
         }
 
         // Test commit template
-        $processCommitTemplate = new Process(['git', 'config', '--get', 'commit.template'], $this->coreDevFolder);
+        $processCommitTemplate = new Process(['git', 'config', '--get', 'commit.template'], self::CORE_REPO_CACHE);
         $processCommitTemplate->setTty(Process::isTtySupported());
         $processCommitTemplate->run();
+        $outputTemplate = trim($processCommitTemplate->getOutput());
 
-        if (!empty($outputTemplate) && $filesystem->exists(trim($outputTemplate))) {
-            $event->getIO()->write('<fg=green;options=bold>✔</> Git "commit.template" is set to ' . trim($outputTemplate) . '.');
+        if ($outputTemplate !== '' && $filesystem->exists($outputTemplate)) {
+            $event->getIO()->write('<fg=green;options=bold>✔</> Git "commit.template" is set to ' . $outputTemplate . '.');
         } else {
             // @todo: Provide command to set the commit template
             $event->getIO()->write('<fg=red;options=bold>✘</> Git "commit.template" not set or file does not exist, please run "composer tdk:set-commit-template"');

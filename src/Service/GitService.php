@@ -18,7 +18,7 @@ class GitService extends BaseService
 
     private string $git;
 
-    public function __construct(protected ConsoleLogger $logger, private readonly string $repository, private readonly string $targetFolder, private readonly bool $noInteraction)
+    public function __construct(protected ConsoleLogger $logger, private readonly string $repository, private readonly string $targetFolder)
     {
         $this->git = (new ExecutableFinder())->find('git');
         $this->pathService = new PathService();
@@ -29,11 +29,10 @@ class GitService extends BaseService
 
     /**
      * @param array<string> $userData
-     * @return void
      */
     public function setGitConfig(array $userData): void
     {
-        $pushUrl = 'ssh://' . $userData['username'] . '@' . $this->reviewServer;
+        $pushUrl = 'ssh://' . $userData['username'] . '@' . self::REVIEW_SERVER;
         $this->setGitConfigValue('remote.origin.pushurl', $pushUrl);
         $this->setGitConfigValue('user.name', $userData['display_name'] ?? $userData['name'] ?? $userData['username']);
         $this->setGitConfigValue('user.email', $userData['email']);
@@ -41,16 +40,7 @@ class GitService extends BaseService
 
     public function setCommitTemplate(string $path): void
     {
-        $absolutePath = realpath($path);
-        if($absolutePath === false) {
-            // Resolve home directory
-            if(str_starts_with($path, '~')) {
-                $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
-            }
-
-            $this->fileSystem->mkdir(dirname($absolutePath));
-        }
-
+        $absolutePath = $this->resolveAbsolutePath($path);
         $this->setGitConfigValue('commit.template', $absolutePath);
     }
 
@@ -64,21 +54,29 @@ Releases: main
 EOF;
 
         try {
-            $absolutePath = realpath($path);
-            if($absolutePath === false) {
-                // Resolve home directory
-                if(str_starts_with($path, '~')) {
-                    $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
-                } else {
-                    $absolutePath = $path;
-                }
-
-                $this->fileSystem->mkdir(dirname($absolutePath));
-            }
-            $this->fileSystem->dumpFile($path, $content);
+            $absolutePath = $this->resolveAbsolutePath($path);
+            $this->fileSystem->dumpFile($absolutePath, $content);
         } catch (IOException $e) {
-            $this->logger->error('<error>Failed to create the commit template ' . $path . '</error>');
+            $this->logger->error('Failed to create the commit template: ' . $path);
         }
+    }
+
+    private function resolveAbsolutePath(string $path): string
+    {
+        $absolutePath = realpath($path);
+        if ($absolutePath !== false) {
+            return $absolutePath;
+        }
+
+        if (str_starts_with($path, '~')) {
+            $absolutePath = $this->pathService->getHomeDirectory() . substr($path, 1);
+        } else {
+            $absolutePath = $path;
+        }
+
+        $this->fileSystem->mkdir(dirname($absolutePath));
+
+        return $absolutePath;
     }
 
     /**
@@ -93,7 +91,7 @@ EOF;
      * @param string $url The repositor to clone from
      * @param bool $ignoreCache Ignore the copy created in the config directory
      */
-    public function cloneRepository(string $url, bool $ignoreCache = false): void
+    public function cloneRepository(string $url, bool $ignoreCache = false): bool
     {
         $this->fileSystem->mkdir([$this->targetFolder]);
         $repoTargetPath = $ignoreCache ? $this->targetFolder . '/' . self::CORE_REPO_CACHE : $this->pathService->getConfigFolder() . '/' . self::CORE_REPO_CACHE;
@@ -102,7 +100,8 @@ EOF;
             $process = $this->cloneRepositoryToProjectFolder($url, $repoTargetPath);
 
             if (!$process->isSuccessful()) {
-                $this->logger->warning('<warning>Could not download git repository ' . $url . ' </warning>');
+                $this->logger->warning('Could not download git repository ' . $url);
+                return false;
             }
         }
 
@@ -116,15 +115,20 @@ EOF;
 
                 if ($process->isSuccessful()) {
                     $this->setGitConfigValue('remote.origin.url', $this->repository);
+                } else {
+                    $this->logger->warning('Could not clone from local cache');
+                    return false;
                 }
             }
         }
+
+        return true;
     }
 
     public function checkoutBranch(string $branch): int
     {
         if (empty($branch)) {
-            $this->logger->error(('<warning>No branch name given</warning>'));
+            $this->logger->error('No branch name given');
             return Command::FAILURE;
         }
 
@@ -133,9 +137,9 @@ EOF;
         $process->setTimeout(null);
         $process->run();
 
-        $this->logger->info('<info>Checking out branch "' . $branch . '"!</info>');
+        $this->logger->info('Checking out branch "' . $branch . '"');
         if (!$process->isSuccessful()) {
-            $this->logger->error('<warning>Could not checkout branch ' . $branch . ' </warning>');
+            $this->logger->error('Could not checkout branch ' . $branch);
             return Command::FAILURE;
         }
 
@@ -167,12 +171,12 @@ EOF;
      * @param string $repoTargetPath
      * @return Process
      */
-    public function cloneRepositoryToProjectFolder(string $url, string $repoTargetPath): Process
+    private function cloneRepositoryToProjectFolder(string $url, string $repoTargetPath): Process
     {
         $process = new Process([$this->git, 'clone', $url, $repoTargetPath]);
         $process->setTty(Process::isTtySupported());
         $process->setTimeout(null);
-        $this->logger->notice('<info>Cloning TYPO3 repository. This may take a while depending on your internet connection!</info>');
+        $this->logger->notice('Cloning TYPO3 repository. This may take a while depending on your internet connection.');
         $process->run();
         return $process;
     }

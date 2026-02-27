@@ -92,6 +92,12 @@ class PathService
         throw new RuntimeException('Home directory not found.');
     }
 
+    public function getFrankenPhpBinary(): string
+    {
+        $this->pharExtractFileToConfigBin('bin/frankenphp');
+        return $this->getConfigFolder() . '/bin/frankenphp';
+    }
+
     private function getPharPath(): string
     {
         return $_SERVER['SCRIPT_NAME'];

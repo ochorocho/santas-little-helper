@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ochorocho\SantasLittleHelper\Commands;
 
 use Ochorocho\SantasLittleHelper\Factory\ConsoleLoggerFactory;
@@ -52,10 +54,14 @@ class CoreComposer extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $this->logger = ConsoleLoggerFactory::create($io);
+        $targetFolder = $input->getArgument('target-folder');
 
-        // Download repository and checkout branch
-        $gitService = new GitService($this->logger, $input->getArgument('repository'), $input->getArgument('target-folder'), $input->getOption('no-interaction'));
-        $gitService->cloneRepository($input->getArgument('repository'), (bool)$input->getOption('clone-new'));
+        $gitService = new GitService($this->logger, $input->getArgument('repository'), $targetFolder);
+
+        if (!$gitService->cloneRepository($input->getArgument('repository'), (bool)$input->getOption('clone-new'))) {
+            $io->error('Failed to clone the TYPO3 repository.');
+            return Command::FAILURE;
+        }
         $gitService->checkoutBranch($input->getArgument('branch'));
 
         if ($input->getOption('cache-only')) {
@@ -67,51 +73,54 @@ class CoreComposer extends Command
         $userData = $this->getUserData($io);
         $gitService->setGitConfig($userData);
 
-        // Set commit message template
+        $this->configureCommitTemplate($io, $gitService);
+        $this->configureHooks($io, $targetFolder);
+        $this->prepareComposerProject($targetFolder);
+        $this->runTypo3Setup($output, $targetFolder);
+
+        $this->logger->notice('Happy days ... TYPO3 Composer CoreDev Setup done!');
+
+        return Command::SUCCESS;
+    }
+
+    private function configureCommitTemplate(SymfonyStyle $io, GitService $gitService): void
+    {
         if (getenv('SLH_COMMIT_TEMPLATE')) {
             $commitTemplatePath = getenv('SLH_COMMIT_TEMPLATE');
         } else {
-            $pathService = new PathService();
-            $templatePath = $pathService->getConfigFolder() . '/gitmessage.txt';
+            $templatePath = $this->pathService->getConfigFolder() . '/gitmessage.txt';
             $commitTemplatePath = $io->ask('Set TYPO3 commit message template?', $templatePath);
         }
 
-        // Create a commit message template if
-        // the target file path does not exist
         if (!is_file($commitTemplatePath)) {
-            $createTemplate = $io->confirm('The commit message template file does not exist, do you want me to create it?', $commitTemplatePath);
+            $createTemplate = $io->confirm('The commit message template file does not exist, do you want me to create it?', true);
             if ($createTemplate) {
                 $gitService->createCommitTemplate($commitTemplatePath);
             }
         }
         $gitService->setCommitTemplate($commitTemplatePath);
+    }
 
-        // Enable Commit Hooks
+    private function configureHooks(SymfonyStyle $io, string $targetFolder): void
+    {
         $force = (bool)(getenv('SLH_HOOK_CREATE') ?: false);
         $answer = $force || $io->confirm('Setup "Commit Message" and "Pre Commit" hook?');
 
         if ($answer) {
             try {
                 $hookService = new HookService($this->logger);
-                $hookService->create($input->getArgument('target-folder'));
+                $hookService->create($targetFolder);
             } catch (FileNotFoundException|IOException $e) {
                 $io->error('Could not create Hooks: ' . $e->getMessage());
             }
         }
+    }
 
-        // Create composer.json
-        $this->prepareComposerProject($input->getArgument('target-folder'));
-
-        // Run TYPO3 setup command
-        $command = new CommandService($output, $this->pathService, $input->getArgument('target-folder'));
+    private function runTypo3Setup(OutputInterface $output, string $targetFolder): void
+    {
+        $command = new CommandService($output, $this->pathService, $targetFolder);
         $command->setup();
         $command->styleguideGenerate();
-
-        $this->logger->notice('🧟 Happy days ... TYPO3 Composer CoreDev Setup done!');
-        // @todo: sort methods - gather data first, then process all at once
-        // @todo: Fix git issue when repo does already exist. Do not clone.
-
-        return Command::SUCCESS;
     }
 
     /**
@@ -124,19 +133,20 @@ class CoreComposer extends Command
             $composerService->init();
             $composerService->setLocalCoreRepository();
             $composerService->requireAllCorePackages();
-        } catch (\JsonException|\Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error('Could not prepare composer.json file: ' . $e->getMessage());
         }
     }
 
     /**
+     * @return array<string, mixed>
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      * @throws \JsonException
      */
-    public function getUserData(SymfonyStyle $io): mixed
+    private function getUserData(SymfonyStyle $io): array
     {
         $validator = new SetupValidator();
         if (getenv('SLH_USERNAME')) {
